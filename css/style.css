@@ -25,11 +25,11 @@ html {
 	background: linear-gradient(to bottom right, rgba(177, 177, 87, 0.562) 20%, rgba(138, 18, 36, 0.651) 100%);
 	border-radius: 5px;
     box-shadow: 3px 3px 1px rgba(0,0,0,0.15);
-
+    
 	color: rgba(19, 19, 19, 0.666);
     font-weight: bold;
     margin-bottom: 20px;
-    //text-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-shadow: 0 0 10px rgba(0,0,0,0.1);
 
 }
 
