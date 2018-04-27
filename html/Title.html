@@ -6,11 +6,6 @@
     <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen"/>
 </head>
 
-<script>
-    function scoreBoard(){
-        window.open("ScoreBoard.html");
-    }
-</script>
 
 <body>
     <div class="menu" id="mainMenu">
@@ -18,7 +13,7 @@
     </div>
 
     <div style="text-align: center">
-            <button class="buttons" id="play">PLAY</button>
+            <button class="buttons" id="play" onclick = "fillBoard()">PLAY</button>
             <br/>
             <button class="buttons" id="score" onclick = "scoreBoard()">SCORE BOARD</button>
             <br/>
@@ -27,4 +22,57 @@
 </body>
 
 
+<script>
+    function scoreBoard(){
+        window.open("ScoreBoard.html");
+    }
+    function fillBoard() {
+        var board = document.createElement("div");
+        board.setAttribute("id", "board");
+        board.style.width = "260px";
+        board.style.marginLeft = "18%";
+        document.getElementById("mainMenu").appendChild(board);
+        for (var i = 0; i < 5; i++){
+            var tempGroup = document.createElement("div");
+
+            for (var n = 0; n < 5; n++){
+                var temp = document.createElement("div");
+                var color = Math.floor(Math.random() * 6);
+                switch (color){
+                    case 0:
+                        temp.style.backgroundColor = "yellow";
+                        break;
+                    case 1:
+                        temp.style.backgroundColor = "red";
+                        break;
+                    case 2: 
+                        temp.style.backgroundColor = "blue";
+                        break;
+                    case 3: 
+                        temp.style.backgroundColor = "purple";
+                        break;
+                    case 4: 
+                        temp.style.backgroundColor = "green";
+                        break;
+                    case 5:
+                        temp.style.backgroundColor = "brown";
+                        break;
+                }
+                temp.style.height = "50px";
+                temp.style.width = "50px";
+                temp.style.float = "left";
+                temp.style.margin = "1px";
+                temp.setAttribute("id", n + i * 5);
+                document.getElementById("board").appendChild(temp);
+            }
+  
+
+        }
+        document.getElementById("play").style.visibility = "hidden";
+        document.getElementById("score").style.visibility = "hidden";
+        document.getElementById("rule").style.visibility = "hidden";
+    }
+    
+</script>
 </html>
+
