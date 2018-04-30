@@ -1,6 +1,6 @@
 html {
     height: 100%;
-    background: url(../img/background.png) no-repeat;
+    background: url(../img/background.png) repeat-y;
     -webkit-filter: blur(50%);
     filter: blur(50%);
     background-size: cover;
@@ -33,3 +33,30 @@ html {
     text-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+.backs {
+    background: url(../img/back.png);
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    margin-left: calc(50% - 25px);
+    margin-top: 20px;
+}
+
+#board {
+    display: block;
+    width: 260px;
+    margin-left: calc(50% - 127.5px);
+    display: inline-block;
+}
+
+
+#table {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+td {
+    border-style: dotted;
+    border-width: 2px;
+}
