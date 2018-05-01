@@ -80,11 +80,13 @@ function fillBoard() {
                     temp.setAttribute("class", "brown");
                     break;
             }
-            temp.style.height = "50px";
-            temp.style.width = "50px";
-            temp.style.float = "left";
-            temp.style.margin = "1px";
+            
+
+            $(temp).parent().css({position:'relative'});
+            $(temp).css({top:i*50, left:n*50, width:50, height: 50, posotion:'absolute', display:'inline-block'});
             temp.setAttribute("id", n + i * 5);
+            temp.setAttribute('data-id', n + i * 5);
+            temp.setAttribute('onclick', 'removeItem()');
             document.getElementById("board").appendChild(temp);
         }
     }
@@ -98,6 +100,7 @@ function fillBoard() {
     back.setAttribute("id", "back");
     document.getElementById("mainMenu").appendChild(back);
 }
+
 
 
 function back(){
@@ -114,5 +117,13 @@ function backScore(){
     document.getElementById("play").style.visibility = "visible";
     document.getElementById("score").style.visibility = "visible";
     document.getElementById("rule").style.visibility = "visible";
+
+}
+
+function removeItem(){
+    var id = event.srcElement.id;
+    console.log(id);
+    document.getElementById(id).remove();
+    
 }
 
