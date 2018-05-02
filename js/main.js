@@ -46,6 +46,8 @@ function scoreBoard(){
 function fillBoard() {
     var board = document.createElement("div");
     board.setAttribute("id", "board");
+
+    board.style.position = "relative";
     document.getElementById("mainMenu").appendChild(board);
 
     for (var i = 0; i < 5; i++){
@@ -82,11 +84,15 @@ function fillBoard() {
             }
             
 
-            $(temp).parent().css({position:'relative'});
-            $(temp).css({top:i*50, left:n*50, width:50, height: 50, posotion:'absolute', display:'inline-block'});
+
+            $(temp).css({top:i*50, left:n*50, width:50, height: 50, position:'absolute', display:'inline-block'});
             temp.setAttribute("id", n + i * 5);
             temp.setAttribute('data-id', n + i * 5);
-            temp.setAttribute('onclick', 'removeItem()');
+            $(temp).click(function (){
+                var thisId = this.id;
+                var thisItem = document.getElementById(thisId);
+                removeItem(thisItem);
+            });
             document.getElementById("board").appendChild(temp);
         }
     }
@@ -120,10 +126,51 @@ function backScore(){
 
 }
 
-function removeItem(){
-    var id = event.srcElement.id;
-    console.log(id);
-    document.getElementById(id).remove();
+function removeItem(e){
+    upperItemDrop(e);
+    e.remove(); 
+}
+
+
+
+function upperItemDrop(e){
+    //get the upper item assign it to = upper
     
+
+    var thisId = e.id;
+    var upperId = thisId - 5;
+    console.log(upperId);
+    var upperItem = document.getElementById(upperId);
+    console.log(upperItem);
+    var thisPos = $(e).position();
+
+    //x = $(this).position().left
+    var thisX = thisPos.left;
+    //y = $(this).position().top
+    var thisY = thisPos.top;
+    //upper.moveItem(x, y, id);
+    moveItem(upperItem, thisX, thisY, thisId);
+}
+
+function moveItem(e, x, y, id){
+    $(e).animate({left: x,
+                  top: y});
+    console.log(e);
+    e.setAttribute('id', id);
+}
+
+function swapItem(a, b){
+    //var aPos = $(a).position();
+    //var bPos = $(b).position();
+    //a.moveItem(bPos.X, bPos.Y, b.attr('id'));
+    //b.moveItem(aPos.X, aPos.Y, b.attr('id'));
+}
+
+function aaa(e){
+    $(e).somethingelse();
+}
+
+function aaa(){
+    this.somethingelse();
 }
 

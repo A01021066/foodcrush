@@ -43,6 +43,10 @@ html {
     margin-top: 20px;
 }
 
+#back {
+    margin-top: 290px;
+}
+
 #board {
     width: 260px;
     margin-left: calc(50% - 127.5px);
