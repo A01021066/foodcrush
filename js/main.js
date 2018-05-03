@@ -56,42 +56,14 @@ function fillBoard() {
         for (var n = 0; n < 5; n++){
             var temp = document.createElement("div");
             var color = Math.floor(Math.random() * 6);
-            switch (color){
-                case 0:
-                    temp.style.backgroundColor = "yellow";
-                    temp.setAttribute("class", "yellow");
-                    break;
-                case 1:
-                    temp.style.backgroundColor = "red";
-                    temp.setAttribute("class", "red");
-                    break;
-                case 2: 
-                    temp.style.backgroundColor = "blue";
-                    temp.setAttribute("class", "blue");
-                    break;
-                case 3: 
-                    temp.style.backgroundColor = "purple";
-                    temp.setAttribute("class", "purple");
-                    break;
-                case 4: 
-                    temp.style.backgroundColor = "green";
-                    temp.setAttribute("class", "green");
-                    break;
-                case 5:
-                    temp.style.backgroundColor = "brown";
-                    temp.setAttribute("class", "brown");
-                    break;
-            }
-            
-
-
+            assignColor(temp, color);
             $(temp).css({top:i*50, left:n*50, width:50, height: 50, position:'absolute', display:'inline-block'});
             temp.setAttribute("id", n + i * 5);
             temp.setAttribute('data-id', n + i * 5);
             $(temp).click(function (){
                 var thisId = this.id;
-                var thisItem = document.getElementById(thisId);
-                removeItem(thisItem);
+
+                removeItem(thisId);
             });
             document.getElementById("board").appendChild(temp);
         }
@@ -106,8 +78,6 @@ function fillBoard() {
     back.setAttribute("id", "back");
     document.getElementById("mainMenu").appendChild(back);
 }
-
-
 
 function back(){
     document.getElementById("board").outerHTML = "";
@@ -126,37 +96,95 @@ function backScore(){
 
 }
 
-function removeItem(e){
-    upperItemDrop(e);
-    e.remove(); 
+function assignColor(temp, color){
+    switch (color){
+        case 0:
+            temp.style.backgroundImage = 'url(../img/icon/' + 'buns' + '.png)';
+            temp.setAttribute("class", "buns");
+            break;
+        case 1:
+            temp.style.backgroundImage = 'url(../img/icon/' + 'patty' + '.png)';
+            temp.setAttribute("class", "patty");
+            break;
+        case 2: 
+        temp.style.backgroundImage = 'url(../img/icon/' + 'ketchup' + '.png)';
+            temp.setAttribute("class", "ketchup");
+            break;
+        case 3: 
+        temp.style.backgroundImage = 'url(../img/icon/' + 'cheese' + '.png)';
+            temp.setAttribute("class", "cheese");
+            break;
+        case 4: 
+            temp.style.backgroundImage = 'url(../img/icon/' + 'lettuce' + '.png)';
+            temp.setAttribute("class", "lettuce");
+            break;
+        case 5:
+            temp.style.backgroundImage = 'url(../img/icon/' + 'pickle' + '.png)';
+            temp.setAttribute("class", "pickle");
+            break;
+    }
 }
 
-
+function removeItem(e){
+    var item = document.getElementById(e);
+    upperItemDrop(e);
+    item.remove(); 
+}
 
 function upperItemDrop(e){
     //get the upper item assign it to = upper
-    
 
-    var thisId = e.id;
-    var upperId = thisId - 5;
+    var thisItem = document.getElementById(e);
+    var upperId = e - 5;
     console.log(upperId);
-    var upperItem = document.getElementById(upperId);
-    console.log(upperItem);
-    var thisPos = $(e).position();
+    if (upperId >= 0){
+        var upperItem = document.getElementById(upperId);
+        console.log(upperItem);
+        var thisPos = $(thisItem).position();
 
-    //x = $(this).position().left
-    var thisX = thisPos.left;
-    //y = $(this).position().top
-    var thisY = thisPos.top;
-    //upper.moveItem(x, y, id);
-    moveItem(upperItem, thisX, thisY, thisId);
+        //x = $(this).position().left
+        var thisX = thisPos.left;
+        //y = $(this).position().top
+        var thisY = thisPos.top;
+        //upper.moveItem(x, y, id);
+        moveItem(upperItem, thisX, thisY, e);
+        checkUpperSpace(e);
+    }
+
+    else if (upperId < 0) {
+        var newItem = generateNewItem(e);
+        checkUpperSpace(e);
+
+    }
+    
 }
+
+
+function generateNewItem(x){
+    var newItem = document.createElement('div');
+    var color = Math.floor(Math.random() * 6);
+    newItem.setAttribute('id', x);
+    newItem.setAttribute('data-id', x);
+    assignColor(newItem, color);
+    $(newItem).click(function (){
+        var thisId = this.id;
+        removeItem(thisId);
+    });
+    $(newItem).css({top: -50, left: x*50, width: 50, height: 50, opacity: 0, position: 'absolute', display: 'inline-block'});
+    board.appendChild(newItem);
+    moveItem(newItem, x*50, 0, x);
+}
+
+
 
 function moveItem(e, x, y, id){
     $(e).animate({left: x,
-                  top: y});
+                  top: y,
+                  visibility: 'visible',
+                  opacity: 1.0});
     console.log(e);
     e.setAttribute('id', id);
+    e.setAttribute('data-id', id);
 }
 
 function swapItem(a, b){
@@ -166,11 +194,14 @@ function swapItem(a, b){
     //b.moveItem(aPos.X, aPos.Y, b.attr('id'));
 }
 
-function aaa(e){
-    $(e).somethingelse();
+function checkUpperSpace(e){
+
+
+
+
 }
 
-function aaa(){
-    this.somethingelse();
-}
+
+
+
 
