@@ -53,13 +53,13 @@ function fillBoard() {
     for (var i = 0; i < 5; i++){
         var tempGroup = document.createElement("div");
 
-        for (var n = 0; n < 5; n++){
+        for (var n = 0; n < 8; n++){
             var temp = document.createElement("div");
             var color = Math.floor(Math.random() * 6);
             assignColor(temp, color);
             $(temp).css({top:i*50, left:n*50, width:50, height: 50, position:'absolute', display:'inline-block'});
-            temp.setAttribute("id", n + i * 5);
-            temp.setAttribute('data-id', n + i * 5);
+            temp.setAttribute("id", n + i * 8);
+            temp.setAttribute('data-id', n + i * 8);
             $(temp).click(function (){
                 var thisId = this.id;
 
@@ -85,6 +85,14 @@ function back(){
     document.getElementById("play").style.visibility = "visible";
     document.getElementById("score").style.visibility = "visible";
     document.getElementById("rule").style.visibility = "visible";
+    var person = prompt("Please Enter Your Name", "AAA");
+    var score = Math.floor(Math.random()* 60);
+    if (person != null) {
+        //taylor's part. This is where you encode 
+        //the prompt data which is the name of the user to our database
+        //the score varaible generates a random number for score.
+        document.getElementById("test").innerHTML = "Hello" + person;
+    }
 }
 
 function backScore(){
@@ -127,7 +135,10 @@ function assignColor(temp, color){
 
 function removeItem(e){
     var item = document.getElementById(e);
+    
+
     upperItemDrop(e);
+
     item.remove(); 
 }
 
@@ -135,7 +146,7 @@ function upperItemDrop(e){
     //get the upper item assign it to = upper
 
     var thisItem = document.getElementById(e);
-    var upperId = e - 5;
+    var upperId = e - 8;
     console.log(upperId);
     if (upperId >= 0){
         var upperItem = document.getElementById(upperId);
@@ -148,12 +159,11 @@ function upperItemDrop(e){
         var thisY = thisPos.top;
         //upper.moveItem(x, y, id);
         moveItem(upperItem, thisX, thisY, e);
-        checkUpperSpace(e);
     }
 
     else if (upperId < 0) {
         var newItem = generateNewItem(e);
-        checkUpperSpace(e);
+        
 
     }
     
@@ -194,12 +204,8 @@ function swapItem(a, b){
     //b.moveItem(aPos.X, aPos.Y, b.attr('id'));
 }
 
-function checkUpperSpace(e){
 
 
-
-
-}
 
 
 
