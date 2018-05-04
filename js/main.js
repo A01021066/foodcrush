@@ -51,10 +51,19 @@ function backScore(){
     var person = prompt("Please Enter Your Name", "AAA");
     var score = Math.floor(Math.random()* 60);
     if (person != null) {
-        //taylor's part. This is where you encode 
-        //the prompt data which is the name of the user to our database
-        //the score varaible generates a random number for score.
-        document.getElementById("test").innerHTML = "Hello" + person;
+        $.ajax({
+            url: "../newscore.php",
+            type: "POST",
+            dataType: "json",
+            data: {'username':person,'score':score},
+            success: function(data) {
+                console.log("Data returned from server: ", data);
+                $("#test").text(data['msg']);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                $("#test").text(jqXHR.statusText);
+            }
+        });
     }
 }
 
