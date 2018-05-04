@@ -1,48 +1,3 @@
-function scoreBoard(){
-    var score = document.createElement("div");
-    score.setAttribute("id", "scoreBoard");
-    document.getElementById("mainMenu").appendChild(score);
-    
-    
-    var table = document.createElement("table");
-    table.setAttribute("id", "table");
-    document.getElementById("scoreBoard").appendChild(table);
-
-    for (var i=0; i < 10; i++){
-        var n = document.createElement("tr");
-        n.setAttribute("id", "row" + i);
-        document.getElementById("table").appendChild(n);
-    }
-
-    var rowCount = 0;
-    for (var m=0; m < i; m++){
-            var r = document.createElement("td");
-            var rowId = "row" + rowCount;
-            document.getElementById(rowId).appendChild(r);
-            var o = document.createElement("td");
-            document.getElementById(rowId).appendChild(o);
-            var p = document.createElement("p");
-            r.appendChild(p);
-            var q = document.createElement("p");
-            o.appendChild(q);
-            p.innerHTML = "Name" + rowCount;
-            q.innerHTML = 100 - m * 10;
-            rowCount++;
-        }
-
-
-    document.getElementById("play").style.visibility = "hidden";
-    document.getElementById("score").style.visibility = "hidden";
-    document.getElementById("rule").style.visibility = "hidden";
-    var back = document.createElement('button');
-    back.setAttribute("onclick", "backScore()");
-    back.setAttribute("id", "backScore");
-    back.setAttribute("class", "backs");
-    document.getElementById("mainMenu").appendChild(back);
-    
-}
-
-
 function fillBoard() {
     var board = document.createElement("div");
     board.setAttribute("id", "board");
@@ -93,7 +48,23 @@ function backScore(){
     document.getElementById("play").style.visibility = "visible";
     document.getElementById("score").style.visibility = "visible";
     document.getElementById("rule").style.visibility = "visible";
-
+    var person = prompt("Please Enter Your Name", "AAA");
+    var score = Math.floor(Math.random()* 60);
+    if (person != null) {
+        $.ajax({
+            url: "../newscore.php",
+            type: "POST",
+            dataType: "json",
+            data: {'username':person,'score':score},
+            success: function(data) {
+                console.log("Data returned from server: ", data);
+                $("#test").text(data['msg']);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                $("#test").text(jqXHR.statusText);
+            }
+        });
+    }
 }
 
 function assignColor(temp, color){
