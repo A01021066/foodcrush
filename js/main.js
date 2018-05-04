@@ -48,7 +48,14 @@ function backScore(){
     document.getElementById("play").style.visibility = "visible";
     document.getElementById("score").style.visibility = "visible";
     document.getElementById("rule").style.visibility = "visible";
-
+    var person = prompt("Please Enter Your Name", "AAA");
+    var score = Math.floor(Math.random()* 60);
+    if (person != null) {
+        //taylor's part. This is where you encode 
+        //the prompt data which is the name of the user to our database
+        //the score varaible generates a random number for score.
+        document.getElementById("test").innerHTML = "Hello" + person;
+    }
 }
 
 function assignColor(temp, color){
