@@ -43,6 +43,10 @@ html {
     margin-top: 20px;
 }
 
+#mainMenu {
+    text-align: center;
+}
+
 #back {
     margin-top: 290px;
 }
@@ -53,13 +57,22 @@ html {
     display: inline-block;
 }
 
-
-#table {
-    margin-right: auto;
-    margin-left: auto;
+#scoreBoard {
+    width: 260px;
+    margin-left: calc(50% - 127.5px);
 }
 
 td {
-    border-style: dotted;
+    border-style: ridge;
     border-width: 2px;
+}
+
+#nameInput {
+    text-align: center;
+    position: relative;
+    margin-bottom: 1%;
+}
+
+#usermsg {
+    text-align: center;
 }
