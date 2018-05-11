@@ -53,13 +53,12 @@ html {
 
 #board {
     width: 260px;
-    margin-left: calc(50% - 127.5px);
     display: inline-block;
 }
 
 #scoreBoard {
     width: 260px;
-    margin-left: calc(50% - 127.5px);
+  margin: 0px auto;
 }
 
 td {

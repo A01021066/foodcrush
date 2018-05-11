@@ -46,6 +46,7 @@ function backScore(){
     document.getElementById("scoreBoard").outerHTML = "";
     document.getElementById("backScore").outerHTML = "";
     document.getElementById("nameInput").outerHTML = "";
+    document.getElementById("usermsg").outerHTML = "";
     document.getElementById("play").style.visibility = "visible";
     document.getElementById("score").style.visibility = "visible";
     document.getElementById("rule").style.visibility = "visible";
