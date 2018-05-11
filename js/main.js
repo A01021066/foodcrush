@@ -45,26 +45,10 @@ function back(){
 function backScore(){
     document.getElementById("scoreBoard").outerHTML = "";
     document.getElementById("backScore").outerHTML = "";
+    document.getElementById("nameInput").outerHTML = "";
     document.getElementById("play").style.visibility = "visible";
     document.getElementById("score").style.visibility = "visible";
     document.getElementById("rule").style.visibility = "visible";
-    var person = prompt("Please Enter Your Name", "AAA");
-    var score = Math.floor(Math.random()* 60);
-    if (person != null) {
-        $.ajax({
-            url: "../newscore.php",
-            type: "POST",
-            dataType: "json",
-            data: {'username':person,'score':score},
-            success: function(data) {
-                console.log("Data returned from server: ", data);
-                $("#test").text(data['msg']);
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                $("#test").text(jqXHR.statusText);
-            }
-        });
-    }
 }
 
 function assignColor(temp, color){
