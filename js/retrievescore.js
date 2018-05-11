@@ -1,4 +1,8 @@
 function scoreBoard() {
+    var message = document.createElement("p");
+    message.setAttribute("id", "usermsg");
+    document.getElementById("mainMenu").appendChild(message);
+
     var form = document.createElement("form");
     form.setAttribute("id", "nameInput");
     var nameField = document.createElement("input");
@@ -50,7 +54,7 @@ function nameSubmit() {
     });
 }
 
-function buildTable(){
+function buildTable() {
     $.ajax({
         url: "../highscores.php",
         dataType: "json",
