@@ -3,9 +3,9 @@
     $data = array("status" => "fail", "msg" => "On $methodType");
 
     $servername = "localhost";
-    $dblogin = "root";
-    $password = "";
-    $dbname = "scores";
+    $dblogin = "foodcrus_taylor";
+    $password = "group26publishedmilk";
+    $dbname = "foodcrus_scores";
 
     if ($methodType === 'GET') {
         if(isset($_GET['output'])) {
