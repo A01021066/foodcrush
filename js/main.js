@@ -80,9 +80,52 @@ function endGame(){
 function scoreboard(){
     //console.log('showing leader board');
     game.world.remove(menu);
+    var tstyle = { font: "12px Arial", fill: "#FFF"};
+    var hstyle = { font: "bold 16px Arial", fill: "#FFF"};
+    var scores = game.add.group();
+    var header = game.make.text(game.world.centerX - 95, game.world.centerY - 250, "High Scores", hstyle);
+    scores.add(header);
+    var score1 = game.make.text(game.world.centerX - 95, game.world.centerY - 230, "Test User Test Score", tstyle);
+    scores.add(score1);
+    var score2 = game.make.text(game.world.centerX - 95, game.world.centerY - 210, "Test User Test Score", tstyle);
+    scores.add(score2);
+    var score3 = game.make.text(game.world.centerX - 95, game.world.centerY - 190, "Test User Test Score", tstyle);
+    scores.add(score3);
     scoreBack = game.add.group();
     var scoreEnd = game.make.button(game.world.centerX - 95, game.world.centerY + 250, 'back', endScore, this, 2, 1);
     scoreBack.add(scoreEnd);
+}
+
+function buildTable(){
+    $.ajax({
+        url: "../php/gethighscores.php",
+        dataType: "json",
+        type: "GET",
+        data: { output: 'json' },
+        success: function (data) {
+
+            console.log(data);
+            // score array
+            var tableData = "<table><tr><th>Username</th><th>Score</th></tr>";
+
+            for (var key in data["score"]) {
+                tableData += "<tr>";
+                for (var value in data["score"][key]) {
+                    tableData += "<td>" + data["score"][key][value] + "</td>";
+                }
+                tableData += "</tr>";
+            }
+
+            tableData += "</table>";
+
+            $("#scoreBoard").html(tableData);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $("#scoreBoard").text(textStatus + " " + errorThrown
+                + jqXHR.responseText);
+        }
+    });
 }
 
 function endScore(){
