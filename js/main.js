@@ -1,6 +1,7 @@
 var height = $(document).height();
 var width = $(document).width();
 var scoreBack;
+var scoreBoard;
 var gameBack;
 var menu;
 
@@ -82,7 +83,7 @@ function scoreboard(){
     game.world.remove(menu);
     var tstyle = { font: "12px Arial", fill: "#FFF"};
     var hstyle = { font: "bold 16px Arial", fill: "#FFF"};
-    var scores = game.add.group();
+    scoreBoard = game.add.group();
     var header = game.make.text(game.world.centerX - 95, game.world.centerY - 250, "High Scores", hstyle);
     scores.add(header);
     var score1 = game.make.text(game.world.centerX - 95, game.world.centerY - 230, "Test User Test Score", tstyle);
@@ -122,13 +123,13 @@ function buildTable(){
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            $("#scoreBoard").text(textStatus + " " + errorThrown
-                + jqXHR.responseText);
+            scoreBoard.add(game.make.text(textStatus + " " + errorThrown + jqXHR.responseText));
         }
     });
 }
 
 function endScore(){
+    scoreBoard.destroy();
     scoreBack.destroy();
     createMenu();
 
