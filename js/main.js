@@ -11,6 +11,7 @@ var selectedFoodStartPos;
 var selectedFoodTween;
 var tempShiftedFood = null;
 var allowInput;
+var hoveredFood;
 
 
 var game = new Phaser.Game(width, height, Phaser.AUTO);
@@ -56,7 +57,7 @@ function createMenu(){
 
 
 function startToPlay(){
-    console.log('creating level');
+    //console.log('creating level');
     game.world.remove(menu);
     gameBack = game.add.group();
     var gameEnd = game.make.button(game.world.centerX - 95, game.world.centerY + 250, 'back', endGame, this, 2, 1);
@@ -77,7 +78,7 @@ function endGame(){
 }
 
 function scoreboard(){
-    console.log('showing leader board');
+    //console.log('showing leader board');
     game.world.remove(menu);
     scoreBack = game.add.group();
     var scoreEnd = game.make.button(game.world.centerX - 95, game.world.centerY + 250, 'back', endScore, this, 2, 1);
@@ -101,10 +102,12 @@ function createLevel(){
             food.inputEnabled = true;
             food.events.onInputDown.add(selectFood, this);
             food.events.onInputUp.add(releaseFood, this);
+            food.events.onInputOver.add(returnHover, this);
+            
+            food.pixelPerfectOver = true;
             labelFood(food);
 
             setFoodPos(food, i, n);
-            console.log(food.posX);
             
         }
     allowInput = false;
@@ -119,18 +122,22 @@ function createLevel(){
     tempShiftedFood = null;   
 }
 
-function selectFood(food){
-    if(allowInput){
-        selectedFood = food;
+function returnHover(food){
+    hoveredFood = food;
+    console.log(hoveredFood);
+    return;
+}
 
-    }
+function selectFood(food){
+    selectedFood = food;
     selectedFoodStartPos.x = food.posX;
     selectedFoodStartPos.y = food.posY;
-    console.log('food selected');
-    console.log(selectedFoodStartPos);
-    console.log(food.posX);
-    console.log(food.posY);
-    console.log(food.id);
+    //console.log('food selected');
+    //console.log(selectedFoodStartPos);
+    //console.log(food.posX);
+    //console.log(food.posY);
+    //console.log(food.id);
+    //console.log(selectedFood);
 }
 
 function releaseFood(){
@@ -156,13 +163,13 @@ function releaseFood(){
     selectedFood = null;
     tempShiftedFood = null;*/
     
-    swapFood(selectedFood, selectedFood);
+    console.log(hoveredFood);
+    swapFood(selectedFood, hoveredFood);
     
-    console.log('food released');
+    //console.log('food released');
 }
 
 function labelFood(food){
-            console.log(food);
     var label = Math.floor(Math.random() * 6);
     switch (label){
         case 0:
@@ -205,6 +212,11 @@ function setFoodPos(food, posX, posY){
     
 }
 
+function updateFoodPos(food, x, y){
+    food.x = x;
+    food.y = y;
+}
+
 
 function calcFoodId(posX, posY){
     var id = (posY * 6) + posX;
@@ -212,25 +224,41 @@ function calcFoodId(posX, posY){
 }
 
 function swapFood(food1, food2) {
+    var food1x = food1.x;
+    var food1y = food1.y;
+    var food2x = food2.x;
+    var food2y = food2.y;
+    var food1PosX = food1.posX;
+    var food1PosY = food1.posY;
+    var food2PosX = food2.posX;
+    var food2PosY = food2.posY;
+    
+    if(canMoveHere(food1PosX, food1PosY, food2PosX, food2PosY)){
+        setFoodPos(food1, food2PosX, food2PosY);
+        setFoodPos(food2, food1PosX, food1PosY);
+            updateFoodPos(food2, food1x, food1y);
 
-    var tempPosX = food1.posX;
-    var tempPosY = food1.posY;
-    setGemPos(food1, food2.posX, food2.posY);
-    setGemPos(food2, tempPosX, tempPosY);
-
+        updateFoodPos(food1, food2x, food2y);
+    }
 }
 
-function slideFood(pointer, x, y){
-    if (selectedFood && pointer.isDown){
-        var cursorPosX = getFoodPos(x);
-        var cursorPosY = getFoodPos(y);
-        
-        if (canMoveHere(selectedFoodStartPos.x, selectedFoodStartPos.y, cursorPosX, cursorPosY)){
-            
-            }
+//the hovered object that gets passed to swapFoods will "lose" its hoverable property unless the user hovers onto it, then hovers to something else, then hover back.
+
+
+function canMoveHere(fromPosX, fromPosY, toPosX, toPosY){
+    if (toPosX < 0|| toPosX >= 6 || toPosY < 0 || toPosY >= 8){
+        return false;
     }
     
+    if (fromPosX === toPosX && fromPosY >= toPosY -1 && fromPosY <= toPosY +1){
+        return true;
+    }
     
+    if (fromPosY === toPosY && fromPosX >= toPosX - 1 && fromPosX <= toPosX + 1){
+        return true;
+    }
+    
+    return false;
 }
 
 
