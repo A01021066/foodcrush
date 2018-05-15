@@ -11,7 +11,7 @@ var selectedFoodStartPos;
 var selectedFoodTween;
 var tempShiftedFood = null;
 var allowInput;
-var hoveredFood;
+var hoveredFood = null;
 
 
 var game = new Phaser.Game(width, height, Phaser.AUTO);
@@ -19,12 +19,7 @@ var game = new Phaser.Game(width, height, Phaser.AUTO);
 
 var GameState = {
     preload: function(){
-        this.load.image('cheese','img/icon/cheese.png');
-        this.load.image('buns','img/icon/buns.png');
-        this.load.image('lettuce','img/icon/lettuce.png');
-        this.load.image('ketchup','img/icon/ketchup.png');
-        this.load.image('patty','img/icon/patty.png');
-        this.load.image('pickle','img/icon/pickle.png');
+       
         this.load.spritesheet('burger', 'img/icon/hamburger.png',50,50);
         this.load.image('background', 'img/background.png');
         this.load.image('start', 'img/button/start.png');
@@ -39,9 +34,7 @@ var GameState = {
         createMenu();
     },
     
-    update: function(){
-        
-    }    
+
 };
 
     
@@ -91,6 +84,10 @@ function endScore(){
 
 }
 
+function rot(counter){
+
+}
+
 function createLevel(){
     foods = game.add.group();
 
@@ -125,7 +122,7 @@ function createLevel(){
 function returnHover(food){
     hoveredFood = food;
     console.log(hoveredFood);
-    return;
+    
 }
 
 function selectFood(food){
@@ -224,22 +221,29 @@ function calcFoodId(posX, posY){
 }
 
 function swapFood(food1, food2) {
-    var food1x = food1.x;
-    var food1y = food1.y;
-    var food2x = food2.x;
-    var food2y = food2.y;
+
     var food1PosX = food1.posX;
     var food1PosY = food1.posY;
     var food2PosX = food2.posX;
     var food2PosY = food2.posY;
+
     
     if(canMoveHere(food1PosX, food1PosY, food2PosX, food2PosY)){
+        swapFoodAnimation(food1, food2);
         setFoodPos(food1, food2PosX, food2PosY);
         setFoodPos(food2, food1PosX, food1PosY);
-            updateFoodPos(food2, food1x, food1y);
 
-        updateFoodPos(food1, food2x, food2y);
     }
+}
+
+function swapFoodAnimation(food1, food2){
+    var food1x = food1.x;
+    var food1y = food1.y;
+    var food2x = food2.x;
+    var food2y = food2.y;
+
+    game.add.tween(food1).to({x: food2x, y: food2y}, 200, Phaser.Easing.Quadratic.InOut, true);
+    game.add.tween(food2).to({x: food1x, y: food1y}, 200, Phaser.Easing.Quadratic.InOut, true);
 }
 
 //the hovered object that gets passed to swapFoods will "lose" its hoverable property unless the user hovers onto it, then hovers to something else, then hover back.
