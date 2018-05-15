@@ -1,6 +1,7 @@
 var height = $(document).height();
 var width = $(document).width();
 var scoreBack;
+var scoreBoard;
 var gameBack;
 var menu;
 
@@ -51,7 +52,7 @@ function createMenu(){
 
 function startToPlay(){
     //console.log('creating level');
-    game.world.remove(menu);
+    menu.destroy();
     gameBack = game.add.group();
     var gameEnd = game.make.button(game.world.centerX - 95, game.world.centerY + 250, 'back', endGame, this, 2, 1);
     gameBack.add(gameEnd);
@@ -72,13 +73,50 @@ function endGame(){
 
 function scoreboard(){
     //console.log('showing leader board');
-    game.world.remove(menu);
+    menu.destroy();
+    scoreBoard = game.add.group();
+    
+    buildTable();
+  
     scoreBack = game.add.group();
     var scoreEnd = game.make.button(game.world.centerX - 95, game.world.centerY + 250, 'back', endScore, this, 2, 1);
     scoreBack.add(scoreEnd);
 }
 
+function buildTable(){
+    $.ajax({
+        url: "./php/gethighscores.php",
+        dataType: "json",
+        type: "GET",
+        data: { output: 'json' },
+        success: function (data) {
+
+            console.log(data);
+            var tstyle = { font: "12px Arial", fill: "#000"};
+            var hstyle = { font: "bold 20px Arial", fill: "#000"};
+            var header = game.make.text(game.world.centerX - 80, game.world.centerY - 280, "High Scores", hstyle);
+            scoreBoard.add(header);
+            var yShift = 0;
+
+            for (var key in data["score"]) {
+                yShift += 20;
+                var xFlip = 1;
+                for (var value in data["score"][key]) {
+                    var newscore = game.make.text(game.world.centerX - 80 * xFlip, game.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
+                    scoreBoard.add(newscore);
+                    xFlip = -0.9;
+                }
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            var hstyle = { font: "bold 20px Arial", fill: "#000"};
+            scoreBoard.add(game.make.text(game.world.centerX - 80, game.world.centerY - 250, textStatus + " " + errorThrown + jqXHR.responseText, hstyle));
+        }
+    });
+}
+
 function endScore(){
+    scoreBoard.destroy();
     scoreBack.destroy();
     createMenu();
 
