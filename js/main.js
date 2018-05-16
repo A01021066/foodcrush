@@ -4,12 +4,12 @@ var scoreBack;
 var gameBack;
 var menu;
 var gameTime;
+var moveCount;
 
 
 var foods;
 var selectedFood;
 var selectedFoodStartPos;
-
 var hoveredFood;
 
 
@@ -69,6 +69,7 @@ function startToPlay(){
 function endGame(){
     gameBack.destroy();
     foods.destroy();
+    moveCount = 0;
     createMenu();
 
 }
@@ -121,6 +122,7 @@ function createLevel(){
     }
 
     selectedFoodStartPos = {x: 0, y: 0};
+    moveCount = 0;
  
 }
 
@@ -132,12 +134,12 @@ function refillFoodById(i){
     var foodPosY = food.posY;
     var x = food.x;
     var y = food.y;
-    food.destroy();
-    console.log("destroying: ", food);
+
+    //console.log("destroying: ", food);
     
     if (!food.alive){
         var newFood = foods.create(foodPosX * 52, foodPosY * 52, 'burger');
-        console.log("creating: ", newFood);
+        //console.log("creating: ", newFood);
         newFood.inputEnabled =true;
         newFood.events.onInputDown.add(selectFood, this);
         newFood.events.onInputUp.add(releaseFood, this);
@@ -146,8 +148,7 @@ function refillFoodById(i){
         labelFood(newFood);
         setFoodPos(newFood, foodPosX, foodPosY);
         updateFoodPos(newFood, x, y);
-
-
+        food.destroy();
         checkMatch(newFood);
     }
 
@@ -156,7 +157,7 @@ function refillFoodById(i){
 
 function returnHover(food){
     hoveredFood = food;
-    //console.log(hoveredFood.type);
+
     
 }
 
@@ -164,18 +165,13 @@ function selectFood(food){
     selectedFood = food;
     selectedFoodStartPos.x = food.posX;
     selectedFoodStartPos.y = food.posY;
-    //console.log('food selected');
-    //console.log(selectedFoodStartPos);
-    //console.log(food.posX);
-    //console.log(food.posY);
-    //console.log(food.id);
-    //console.log(selectedFood);
+
 }
 
 function releaseFood(){
 
     swapFood(selectedFood, hoveredFood);
-    //console.log('food released');
+
 }
 
 function labelFood(food){
@@ -244,6 +240,7 @@ function swapFood(food1, food2) {
         swapFoodAnimation(food1, food2);
         setFoodPos(food1, food2PosX, food2PosY);
         setFoodPos(food2, food1PosX, food1PosY);
+        moveCount++;
 
     }
 }
@@ -316,18 +313,19 @@ function checkMatch(iteratorFood){
     
     
         var countUp = countSame(iteratorFood, 0, -1);
-        //console.log("up" + countUp);
+
         var countDown = countSame(iteratorFood, 0, 1);
-        //console.log("down" + countDown);
+ 
         var countLeft = countSame(iteratorFood, -1, 0);
-    //console.log("left" + countLeft);
+
         var countRight = countSame(iteratorFood, 1, 0);
-    //console.log("right" + countRight);
+
 
         var countX = countLeft + countRight + 1;
         var countY = countUp + countDown + 1;
 
         if (countX >= 3){
+
             removeFood(iteratorFood.posX - countLeft, iteratorFood.posY, iteratorFood.posX + countRight, iteratorFood.posY);
         }
 
@@ -347,13 +345,25 @@ function removeFood(fromX, fromY, toX, toY){
         for (var n = fromY; n <= toY; n++){
             var foodToRemove = getFood(i, n);
             foodToRemove.kill();
-            foodToRemove.type = Math.random() * 5 + 15;
-            refillFoodById(foodToRemove.id);
-            console.log("removing", foodToRemove);
+            foodToRemove.type = 55;
+            if(moveCount == 0){
+                refillFoodById(foodToRemove.id);
+                console.log("removing", foodToRemove);
+            }
+
+            }
+
+
         }
     }
 
-}
+
+
+
+
+
+
+
 
 game.state.add('GameState', GameState);
 game.state.start('GameState');
