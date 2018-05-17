@@ -348,18 +348,32 @@ function removeFood(fromX, fromY, toX, toY){
             foodToRemove.type = 55;
             if(moveCount == 0){
                 refillFoodById(foodToRemove.id);
-                console.log("removing", foodToRemove);
+                //console.log("removing", foodToRemove);
             }
-
+            else if(moveCount > 0){
+                generateRandomFood(foodToRemove);
+                console.log("creating new fOOD");
             }
-
-
+            }
         }
     }
 
 
 
+function generateRandomFood(originalFood){
+    if (!originalFood.alive){
+        var column = originalFood.x;
+        var y = -52;
+        newFood = foods.create(column, y, 'burger');
+        newFood.inputEnabled =true;
+        newFood.events.onInputDown.add(selectFood, this);
+        newFood.events.onInputUp.add(releaseFood, this);
+        newFood.events.onInputOver.add(returnHover, this);
+        newFood.pixelPerfectOver = true;
+        labelFood(newFood);
 
+    }
+}
 
 
 
