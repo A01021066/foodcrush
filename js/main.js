@@ -18,10 +18,6 @@ var hoveredFood;
 
 var game = new Phaser.Game(width, height, Phaser.AUTO);
 
-Phaser.Device.whenReady(function () {
-    game.plugins.add(PhaserInput.Plugin);
-});
-
 var GameState = {
     preload: function () {
         this.load.image('cheese', 'img/icon/cheese.png');
@@ -40,12 +36,13 @@ var GameState = {
     create: function () {
         this.background = this.game.add.sprite(0, 0, 'background');
         this.background.scale.setTo(100);
+        game.plugins.add(PhaserInput.Plugin);
 
         /*FB.getLoginStatus(function (response) {
             statusChangeCallback(response);
         });*/
 
-        createMenu();
+        createNamePrompt();
     },
 
     update: function () {
@@ -53,30 +50,26 @@ var GameState = {
     }
 };
 
-function statusChangeCallback(response) {
-    if (response.status === 'connected') {
-        createMenu();
-    } else {
-        createNamePrompt();
-    }
-}
-
 function createNamePrompt() {
     menu = game.add.group();
     var message = game.make.text(game.world.centerX - 95, game.world.centerY - 250, "Please enter a username", { font: "bold 20px Arial", fill: "#000" });
     menu.add(message);
 
-    var nameField = game.make.input(game.world.centerX - 95, game.world.centerY - 220, {
+    var nameField = game.add.inputField(game.world.centerX - 95, game.world.centerY - 220, {
         font: '18px Arial',
         fill: '#000',
+        padding: 8,
         width: 190,
         borderWidth: 1,
         borderColor: '#000',
         borderRadius: 6,
         placeHolder: 'ex: John Smith',
+        max: 20,
         type: PhaserInput.InputType.text
     });
     menu.add(nameField);
+
+
 }
 
 function createMenu() {
