@@ -5,6 +5,7 @@ var scoreBoard;
 var gameBack;
 var menu;
 var loginName;
+var loginStatus;
 
 
 var foods;
@@ -31,6 +32,9 @@ var GameState = {
         this.load.image('start', 'img/button/start.png');
         this.load.image('highscore', 'img/button/highscores.png');
         this.load.image('back', 'img/button/back.png');
+        this.load.image('fblogin', 'img/button/fblogin.png');
+        this.load.image('fblogout', 'img/button/fblogout.png');
+        this.load.image('submit', 'img/button/submit.png');
     },
 
     create: function () {
@@ -38,11 +42,9 @@ var GameState = {
         this.background.scale.setTo(100);
         game.plugins.add(PhaserInput.Plugin);
 
-        /*FB.getLoginStatus(function (response) {
+        FB.getLoginStatus(function (response) {
             statusChangeCallback(response);
-        });*/
-
-        createNamePrompt();
+        });
     },
 
     update: function () {
@@ -52,10 +54,13 @@ var GameState = {
 
 function createNamePrompt() {
     menu = game.add.group();
+    loginStatus = game.make.text(10, 10, "Not Logged In.", { font: "12px Arial", fill: "#000" });
+    menu.add(loginStatus);
+
     var message = game.make.text(game.world.centerX - 95, game.world.centerY - 250, "Please enter a username", { font: "bold 20px Arial", fill: "#000" });
     menu.add(message);
 
-    var nameField = game.add.inputField(game.world.centerX - 95, game.world.centerY - 220, {
+    var nameField = game.add.inputField(game.world.centerX - 95, game.world.centerY - 210, {
         font: '18px Arial',
         fill: '#000',
         padding: 8,
@@ -69,16 +74,85 @@ function createNamePrompt() {
     });
     menu.add(nameField);
 
+    function nameSubmit() {
+        if (nameField.value != "" && nameField.value != null) {
+            console.log("Logged in as: " + nameField.value);
+            loginName = nameField.value;
+            menu.destroy();
+            createMenu();
+        }
+    }
 
+    var submitButton = game.make.button(game.world.centerX + 130, game.world.centerY - 210, 'submit', nameSubmit, this, 2, 1, 0);
+    menu.add(submitButton);
+
+    var loginButton = game.make.button(game.world.centerX - 95, game.world.centerY - 150, 'fblogin', loginFB, this, 2, 1, 0);
+    menu.add(loginButton);
+}
+
+function statusChangeCallback(response) {
+    if (response.status === 'connected') {
+        FB.api('/me', function (response) {
+            loginName = response.name;
+        });
+        menu.destroy();
+        createMenu();
+    } else {
+        menu.destroy();
+        createNamePrompt();
+    }
+}
+
+function loginFB() {
+    FB.login(function (response) {
+        if (response.authResponse) {
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me', function (response) {
+                loginName = response.name;
+            });
+            menu.destroy();
+            createMenu();
+        } else {
+            console.log('User cancelled login or did not fully authorize.');
+        }
+    });
+}
+
+function logoutFB() {
+    FB.getLoginStatus(function (response) {
+        if (response.status === 'connected') {
+            FB.logout(function (success) {
+                if (success.authResponse) {
+                    console.log('Successfully logged out.');
+                    loginName = "";
+                    menu.destroy();
+                    createNamePrompt();
+                } else {
+                    console.log('Logout unsuccessful.');
+                }
+            });
+        } else {
+            console.log('Successfully logged out.');
+            loginName = "";
+            menu.destroy();
+            createNamePrompt();
+        }
+    });
 }
 
 function createMenu() {
     menu = game.add.group();
+    loginStatus = game.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    menu.add(loginStatus);
+
     var start = game.make.button(game.world.centerX - 95, game.world.centerY - 200, 'start', startToPlay, this, 2, 1, 0);
     menu.add(start);
 
     var highscore = game.make.button(game.world.centerX - 95, game.world.centerY - 100, 'highscore', scoreboard, this, 2, 1, 0);
     menu.add(highscore);
+
+    var logoutButton = game.make.button(game.world.centerX - 170, game.world.centerY, 'fblogout', logoutFB, this, 2, 1, 0);
+    menu.add(logoutButton);
 }
 
 
@@ -87,6 +161,8 @@ function startToPlay() {
     //console.log('creating level');
     menu.destroy();
     gameBack = game.add.group();
+    loginStatus = game.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    gameBack.add(loginStatus);
     var gameEnd = game.make.button(game.world.centerX - 95, game.world.centerY + 250, 'back', endGame, this, 2, 1);
     gameBack.add(gameEnd);
 
@@ -101,13 +177,14 @@ function endGame() {
     gameBack.destroy();
     foods.destroy();
     createMenu();
-
 }
 
 function scoreboard() {
     //console.log('showing leader board');
     menu.destroy();
     scoreBoard = game.add.group();
+    loginStatus = game.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    scoreBoard.add(loginStatus);
 
     buildTable();
 
