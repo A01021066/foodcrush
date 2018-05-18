@@ -23,6 +23,9 @@ Match3.PreloadState = {
     this.load.image('start', 'assets/button/start.png');
     this.load.image('highscore', 'assets/button/highscores.png');
     this.load.image('back', 'assets/button/back.png');
+    this.load.image('fblogin', 'assets/button/fblogin.png');
+    this.load.image('fblogout', 'assets/button/fblogout.png');
+    this.load.image('submit', 'assets/button/submit.png');
     this.load.audio('ding', 'assets/audio/ding.mp3');
 
   },
