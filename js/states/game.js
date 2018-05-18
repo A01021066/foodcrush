@@ -139,12 +139,12 @@ Match3.GameState = {
     block1Movement.to({ x: block2.x, y: block2.y }, this.ANIMATION_TIME);
 
     block1Movement.onComplete.add(function () {
-
-      this.board.swap(block1, block2);
       block1.rotting++;
       block1.frame = block1.rotting;
       block2.rotting++;
       block2.frame = block2.rotting;
+      this.board.swap(block1, block2);
+
 
       var chains = this.board.findAllChains();
 
@@ -235,7 +235,7 @@ Match3.GameState = {
 
   createMenu: function () {
     menu = this.add.group();
-    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     menu.add(loginStatus);
 
     var start = this.make.button(this.world.centerX - 95, this.world.centerY - 200, 'start', this.startToPlay, this, 2, 1, 0);
@@ -251,7 +251,7 @@ Match3.GameState = {
   startToPlay: function () {
     menu.destroy();
     gameBack = this.add.group();
-    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     gameBack.add(loginStatus);
 
     var gameEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 250, 'back', this.endGame, this, 2, 1);
@@ -270,7 +270,7 @@ Match3.GameState = {
   scoreBoard: function () {
     menu.destroy();
     scoreBoard = this.add.group();
-    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     scoreBoard.add(loginStatus);
 
     this.buildTable();
@@ -339,7 +339,7 @@ Match3.GameState = {
 
   createNamePrompt: function () {
     menu = this.add.group();
-    loginStatus = this.make.text(10, 10, "Not Logged In.", { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Not Logged In.", { font: "16px Arial", fill: "#000" });
     menu.add(loginStatus);
 
     var message = this.make.text(this.world.centerX - 125, this.world.centerY - 250, "Please enter a username", { font: "bold 20px Arial", fill: "#000" });
