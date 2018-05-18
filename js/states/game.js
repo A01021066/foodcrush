@@ -1,0 +1,259 @@
+var Match3 = Match3 || {};
+
+var menu;
+var score;
+var scoreText;
+
+Match3.GameState = {
+
+  init: function() {
+    this.NUM_ROWS = 8;
+    this.NUM_COLS = 8;
+    this.NUM_VARIATIONS = 6;
+    this.BLOCK_SIZE = 50;
+    this.ANIMATION_TIME = 250;
+
+  },
+  create: function() {
+    //game background
+    this.background = this.add.sprite(0, 0, 'background');
+
+    //board model
+    this.board = new Match3.Board(this, this.NUM_ROWS, this.NUM_COLS, this.NUM_VARIATIONS);
+    this.board.consoleLog();
+    this.createMenu();
+    ding = this.sound.add('ding');
+
+
+  },
+
+
+  createBlock: function(x, y, data) {
+
+    var block = this.blocks.getFirstExists(false);
+
+    if(!block) {
+
+      block = new Match3.Block(this, x, y, data);
+      this.blocks.add(block);
+
+    } else {
+
+      block.reset(x, y, data);
+    }
+    
+    return block;
+  },
+
+  drawBoard: function() {
+
+    var i, j, block, square, x, y, data;
+
+    this.blocks = this.add.group();
+    this.score = 0;
+
+
+    //black squares
+    scoreText = this.add.text(this.world.centerX - 225, this.world.centerY - 275, "Score: 0", {font: '36px Arial', fill:'black', align:'left'});
+    scoreText.anchor.setTo(0, 0);
+    var squareBitmap = this.add.bitmapData(this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
+    squareBitmap.ctx.fillStyle = '#000';
+    squareBitmap.ctx.fillRect(0, 0, this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4 );
+
+    for (i = 0; i < this.NUM_ROWS; i++) {
+
+      for (j = 0; j < this.NUM_COLS; j++) {
+
+        x = 36 + j * (this.BLOCK_SIZE + 6);
+        y = 150 + i * (this.BLOCK_SIZE + 6);
+
+        square = this.add.sprite(x, y, squareBitmap);
+        square.anchor.setTo(0.5);
+        square.alpha = 0;
+
+        this.createBlock(x, y, {asset: 'block' + this.board.grid[i][j], row: i, col: j});
+      }
+    }
+
+    this.game.world.bringToTop(this.blocks);
+  },
+
+  getBlockFromIndex: function(position) {
+
+    var foundBlock;
+
+    this.blocks.forEachAlive(function(block) {
+
+      if(block.row === position.row && block.col === position.col) {
+
+        foundBlock = block;
+      }
+    }, this);
+
+    return foundBlock;
+  },
+
+  dropBlock: function(sourceRow, targetRow, col) {
+
+    var block = this.getBlockFromIndex({row: sourceRow, col: col});
+
+    var targetY = 150 + targetRow * (this.BLOCK_SIZE + 6);
+
+    block.row = targetRow;
+
+    var blockMovemet = this.game.add.tween(block);
+
+    blockMovemet.to({y: targetY}, this.ANIMATION_TIME);
+    blockMovemet.start();
+  },
+
+  dropReserveBlock: function(sourceRow, targetRow, col) {
+
+    var x = 36 + col * (this.BLOCK_SIZE + 6);
+    var y = -(this.BLOCK_SIZE + 6) * this.board.RESERVE_ROW + sourceRow * (this.BLOCK_SIZE + 6); 
+
+    var block = this.createBlock(x, y, {asset: 'block' + this.board.grid[targetRow][col], row: targetRow, col: col});
+
+    var targetY = 150 + targetRow * (this.BLOCK_SIZE + 6);
+
+    var blockMovemet = this.game.add.tween(block);
+    blockMovemet.to({y: targetY}, this.ANIMATION_TIME);
+    blockMovemet.start();
+  },
+
+  swapBlocks: function(block1, block2) {
+
+    block1.scale.setTo(1);
+
+    var block1Movement = this.game.add.tween(block1);
+    block1Movement.to({x: block2.x, y: block2.y}, this.ANIMATION_TIME);
+
+    block1Movement.onComplete.add(function(){
+
+      this.board.swap(block1, block2);
+
+      var chains = this.board.findAllChains();
+
+      if(chains.length > 0) {
+        this.score += chains.length;
+        console.log(this.score);
+        this.updateBoard();
+        this.clearSelection(); 
+      } else {
+          this.isReversingSwap = false;
+          this.clearSelection();
+        }
+    }, this);
+
+    block1Movement.start();
+
+    var block2Movement = this.game.add.tween(block2);
+    block2Movement.to({x: block1.x, y: block1.y}, this.ANIMATION_TIME);
+    block2Movement.start();
+
+  },
+
+  updateScore: function(){
+    scoreText.setText('Score: ' + this.score);
+  },
+
+  pickBlock: function(block) {
+
+    if(this.isBoardBlocked) {
+      return;
+    }
+
+    if(!this.selectedBlock) {
+
+      //highlight clicked block
+      block.scale.setTo(1.5);
+
+      this.selectedBlock = block;
+
+    } else {
+
+        this.targetBlock = block;
+
+        if(this.board.checkAdjacent(this.selectedBlock, this.targetBlock)) {
+
+          this.isBoardBlocked = true;
+
+          this.swapBlocks(this.selectedBlock, this.targetBlock);
+
+        } else {
+
+            this.clearSelection();
+        }
+    }
+  },
+
+  clearSelection: function() {
+
+    this.isBoardBlocked = false;
+    this.selectedBlock = null;
+    this.blocks.setAll('scale.x', 1);
+    this.blocks.setAll('scale.y', 1);
+  },
+
+  updateBoard: function() {
+
+    this.board.clearChains();
+    this.board.updateGrid();
+
+    //wait a bit to clear consecutive chains
+
+    this.game.time.events.add(this.ANIMATION_TIME, function(){
+
+      var chains = this.board.findAllChains();
+
+      if(chains.length > 0) {
+        this.updateBoard();
+
+      } else {
+
+          this.clearSelection();
+      }
+
+      this.updateScore();
+    }, this);
+  },
+
+  createMenu: function(){
+    menu = this.add.group();
+    var start = this.make.button(this.world.centerX - 95, this.world.centerY - 200, 'start', this.startToPlay, this, 2, 1, 0);
+    menu.add(start);
+
+    var highscore = this.make.button(this.world.centerX - 95, this.world.centerY - 100, 'highscore', this.scoreBoard, this, 2, 1, 0);
+    menu.add(highscore);
+  },
+
+  startToPlay: function(){
+    menu.destroy();
+    gameBack = this.add.group();
+    var gameEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 250, 'back', this.endGame, this, 2, 1);
+    gameBack.add(gameEnd);
+
+    this.drawBoard();
+  },
+
+  endGame: function(){
+    gameBack.destroy();
+    this.blocks.destroy();
+    scoreText.destroy();
+    this.createMenu();
+  },
+
+  scoreBoard: function(){
+    menu.destroy();
+    scoreBack = this.add.group();
+    var scoreEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 250, 'back', this.endScore, this, 2, 1);
+    scoreBack.add(scoreEnd);
+  },
+
+  endScore: function() {
+    scoreBack.destroy();
+    this.createMenu();
+  }
+};
+
+
