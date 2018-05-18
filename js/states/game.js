@@ -141,6 +141,10 @@ Match3.GameState = {
     block1Movement.onComplete.add(function () {
 
       this.board.swap(block1, block2);
+      block1.rotting++;
+      block1.frame = block1.rotting;
+      block2.rotting++;
+      block2.frame = block2.rotting;
 
       var chains = this.board.findAllChains();
 
@@ -218,6 +222,7 @@ Match3.GameState = {
 
       if (chains.length > 0) {
         this.updateBoard();
+        this.score+= chains.length;
 
       } else {
 
