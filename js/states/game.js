@@ -305,8 +305,25 @@ Match3.GameState = {
         console.log(errorThrown);
         console.log(jqXHR.reponseText);
         var tstyle = { font: "12px Arial", fill: "#000" };
-        var errormsg = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 250, "error retrieving database", tstyle);
+        var errormsg = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 250, "error retrieving info from database", tstyle);
         scoreBoard.add(errormsg);
+      }
+    });
+  },
+
+  submitScore: function () {
+    $.ajax({
+      url: "./php/postnewscore.php",
+      type: "POST",
+      dataType: "json",
+      data: { 'username': loginName, 'score': score },
+      success: function (data) {
+        console.log("Data returned from server: ", data);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.statusText);
+        var tstyle = { font: "12px Arial", fill: "#000" };
+        var errormsg = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 250, "Error sending score to database", tstyle);
       }
     });
   },
