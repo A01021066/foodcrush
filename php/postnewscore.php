@@ -12,7 +12,7 @@
         if(isset($_SERVER['HTTP_X_REQUESTED_WITH'])
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             if(isset($_POST["username"]) && !empty($_POST["username"])
-                && isset($_POST["score"]) && !empty($_POST["score"])){
+                && isset($_POST["score"])){
 
                 $username = $_POST["username"];
                 $score = $_POST["score"];
