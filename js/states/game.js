@@ -364,6 +364,29 @@ Match3.GameState = {
     });
   },
 
+  logoutFB: function () {
+    //doesn't work on local hosts
+    FB.getLoginStatus(function (response) {
+      if (response.status === 'connected') {
+        FB.logout(function (success) {
+          if (success.authResponse) {
+            console.log('Successfully logged out.');
+            loginName = "";
+            menu.destroy();
+            Match3.GameState.createNamePrompt();
+          } else {
+            console.log('Logout unsuccessful.');
+          }
+        });
+      } else {
+        console.log('Successfully logged out.');
+        loginName = "";
+        menu.destroy();
+        Match3.GameState.createNamePrompt();
+      }
+    });
+  },
+
   createNamePrompt: function () {
     menu = this.add.group();
     loginStatus = this.make.text(10, 10, "Not Logged In.", { font: "16px Arial", fill: "#000" });
@@ -414,29 +437,6 @@ Match3.GameState = {
     } else {
       this.createNamePrompt();
     }
-  },
-
-  logoutFB: function () {
-    //doesn't work on local hosts
-    FB.getLoginStatus(function (response) {
-      if (response.status === 'connected') {
-        FB.logout(function (success) {
-          if (success.authResponse) {
-            console.log('Successfully logged out.');
-            loginName = "";
-            menu.destroy();
-            Match3.GameState.createNamePrompt();
-          } else {
-            console.log('Logout unsuccessful.');
-          }
-        });
-      } else {
-        console.log('Successfully logged out.');
-        loginName = "";
-        menu.destroy();
-        Match3.GameState.createNamePrompt();
-      }
-    });
   }
 };
 
