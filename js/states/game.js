@@ -288,7 +288,7 @@ Match3.GameState = {
       url: "./php/gethighscores.php",
       dataType: "json",
       type: "GET",
-      data: { output: 'json' },
+      data: { output: 'json', name: loginName },
       success: function (data) {
 
         console.log(data);
@@ -297,15 +297,24 @@ Match3.GameState = {
         var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280, "High Scores", hstyle);
         scoreBoard.add(header);
         var yShift = 0;
+        var xFlip = 1;
 
         for (var key in data["score"]) {
           yShift += 20;
-          var xFlip = 1;
+          xFlip = 1;
           for (var value in data["score"][key]) {
             var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
             scoreBoard.add(newscore);
             xFlip = -0.9;
           }
+        }
+
+        yShift += 40;
+        xFlip = 1;
+        for (var key in data["userscore"]) {
+          var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["userscore"], tstyle);
+          scoreBoard.add(newscore);
+          xFlip = -0.9;
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -407,7 +416,7 @@ Match3.GameState = {
       borderColor: '#000',
       borderRadius: 6,
       placeHolder: 'ex: John Smith',
-      max: 20,
+      max: 16,
       type: PhaserInput.InputType.text
     });
     menu.add(nameField);
