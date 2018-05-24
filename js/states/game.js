@@ -7,6 +7,8 @@ var scoreText;
 var loginName;
 var loginStatus;
 var updatemsg;
+var move;
+var foodiePoints;
 
 Match3.GameState = {
 
@@ -21,10 +23,10 @@ Match3.GameState = {
   create: function () {
     //game background
     this.background = this.add.sprite(0, 0, 'background');
+    this.createMenu();
 
     //board model
-    this.board = new Match3.Board(this, this.NUM_ROWS, this.NUM_COLS, this.NUM_VARIATIONS);
-    this.board.consoleLog();
+
     Match3.game.plugins.add(PhaserInput.Plugin);
 
     //doesn't work on localhost
@@ -58,14 +60,19 @@ Match3.GameState = {
 
   drawBoard: function () {
 
+    this.board = new Match3.Board(this, this.NUM_ROWS, this.NUM_COLS, this.NUM_VARIATIONS);
+    this.board.consoleLog();
     var i, j, block, square, x, y, data;
 
     this.blocks = this.add.group();
     score = 0;
+    move = 0;
 
     //black squares
     scoreText = this.add.text(this.world.centerX - 225, this.world.centerY - 275, "Score: 0", { font: '36px Arial', fill: 'black', align: 'left' });
     scoreText.anchor.setTo(0, 0);
+    moveText = this.add.text(this.world.centerX - 225, this.world.centerY - 300, "Move: 0", {font: "18px Arial", fill: 'black', align: 'left'});
+    moveText.anchor.setTo(0, 0);
     var squareBitmap = this.add.bitmapData(this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
     squareBitmap.ctx.fillStyle = '#000';
     squareBitmap.ctx.fillRect(0, 0, this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
@@ -134,27 +141,39 @@ Match3.GameState = {
   swapBlocks: function (block1, block2) {
 
     block1.scale.setTo(1);
+    move++;
 
     var block1Movement = this.game.add.tween(block1);
     block1Movement.to({ x: block2.x, y: block2.y }, this.ANIMATION_TIME);
 
     block1Movement.onComplete.add(function () {
+
+      moveText.setText('Move: ' + move);
+
       block1.rotting++;
       block1.frame = block1.rotting;
       block2.rotting++;
       block2.frame = block2.rotting;
       this.board.swap(block1, block2);
 
+      if (block1.rotting >= 3){
+        block1.loadTexture('garbage', 0, false);
+      }
+
+      if (block2.rotting >= 3){
+        block2.loadTexture('garbage', 0, false);
+        this.board.consoleLog();
+      }
+
 
       var chains = this.board.findAllChains();
 
       if (chains.length > 0) {
-        score += chains.length;
-        console.log(score);
+        score += chains.length + (chains.length - 3) * (chains.length - 3);
         this.updateBoard();
         this.clearSelection();
       } else {
-        this.isReversingSwap = false;
+
         this.clearSelection();
       }
     }, this);
@@ -294,7 +313,9 @@ Match3.GameState = {
         console.log(data);
         var tstyle = { font: "12px Arial", fill: "#000" };
         var hstyle = { font: "bold 20px Arial", fill: "#000" };
+
         var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 300, "High Scores", hstyle);
+
         scoreBoard.add(header);
         var yShift = 0;
         var xFlip = 1;
@@ -367,7 +388,7 @@ Match3.GameState = {
     this.createMenu();
   },
 
-  loginFB: function () {
+loginFB: function () {
     FB.login(function (response) {
       if (response.authResponse) {
         console.log('Welcome!  Fetching your information.... ');

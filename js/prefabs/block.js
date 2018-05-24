@@ -32,7 +32,7 @@ Match3.Block.prototype.kill = function() {
 
   ding.play();
 
-
+  this.rotting = 0;
   this.loadTexture('deadBlock');
   this.col = null;
   this.row = null;

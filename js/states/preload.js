@@ -16,6 +16,7 @@ Match3.PreloadState = {
     this.load.spritesheet('block4', 'assets/images/4.png', 50, 50);
     this.load.spritesheet('block5', 'assets/images/5.png', 50, 50);
     this.load.spritesheet('block6', 'assets/images/6.png',50, 50);
+    this.load.spritesheet('garbage', 'assets/images/garbage.png', 50, 50);
     this.load.image('deadBlock', 'assets/images/dead.png');
     this.load.image('background', 'assets/images/backyard2.png');
     this.load.image('title', 'assets/images/title.png');

@@ -118,12 +118,20 @@ Match3.Board.prototype.consoleLog = function() {
     }
   }
 
-  //console.log(infoString);
+  console.log(infoString);
 };
 
 //swap
 
 Match3.Board.prototype.swap = function(source, target) {
+
+  if (source.rotting >= 3){
+    this.grid[source.row][source.col] = 11;
+  }
+
+  if (target.rotting >= 3){
+    this.grid[target.row][target.col] = 11;
+  }
 
   var temp = this.grid[target.row][target.col];
 
@@ -138,11 +146,13 @@ Match3.Board.prototype.swap = function(source, target) {
   target.row = tempPos.row;
   target.col = tempPos.col;
 
+
 };
 
 // checks if adjacent
 
 Match3.Board.prototype.checkAdjacent = function(source, target) {
+
 
   var diffRow = Math.abs(source.row - target.row);
   var diffCol = Math.abs(source.col - target.col);
@@ -157,60 +167,63 @@ Match3.Board.prototype.checkAdjacent = function(source, target) {
 Match3.Board.prototype.isChained = function(block) {
 
   var isChained = false;
-
   //what type of block
   var variation = this.grid[block.row][block.col];
+  //console.log(variation);
   var row = block.row;
   var col = block.col;
 
   //checks chain to left
-
-  if(variation == this.grid[row][col - 1] && variation == this.grid[row][col - 2]) {
-
+  if (variation != 11){
+  if(variation == this.grid[row][col - 1] && variation == this.grid[row][col - 2] && this.grid[row][col - 1] != 11 && this.grid[row][col - 2] != 11) {
+    console.log(this.grid[row][col - 1]);
+    console.log(this.grid[row][col - 2]);
     isChained = true;
   }
 
   //checks chain to right
 
-  if(variation == this.grid[row][col + 1] && variation == this.grid[row][col + 2]) {
-
-    isChained = true;
-  }
-
-  //checks chain up
-  if(this.grid[row - 2]) {
-
-    if(variation == this.grid[row - 1][col] && variation == this.grid[row - 2][col]) {
+  if(variation == this.grid[row][col + 1] && variation == this.grid[row][col + 2] && this.grid[row][col + 1] != 11 && this.grid[row][col + 2] != 11) {
 
       isChained = true;
     }
-  }
 
-  //checks chain down
-  if(this.grid[row + 2]) {
+    //checks chain up
+    if(this.grid[row - 2]) {
 
-    if(variation == this.grid[row + 1][col] && variation == this.grid[row + 2][col]) {
+      if(variation == this.grid[row - 1][col] && variation == this.grid[row - 2][col] && this.grid[row - 1][col] != 11 && this.grid[row - 2][col] != 11) {
 
-      isChained = true;
+        isChained = true;
+      }
     }
-  }
 
-  //checks if center of a horizontal chain
+    //checks chain down
+    if(this.grid[row + 2]) {
 
-  if(variation == this.grid[row][col - 1] && variation == this.grid[row][col + 1]) {
+      if(variation == this.grid[row + 1][col] && variation == this.grid[row + 2][col] & this.grid[row + 1][col] != 11 && this.grid[row + 2][col] != 11) {
 
-    isChained = true;
-  }
-
-  //checks if center of a vertical chain
-
-  if(this.grid[row + 1] && this.grid[row - 1]) {
-
-    if(variation == this.grid[row + 1][col] && variation == this.grid[row - 1][col]) {
-
-      isChained = true;
+        isChained = true;
+      }
     }
-  }
+
+    //checks if center of a horizontal chain
+
+      if(variation == this.grid[row][col - 1] && variation == this.grid[row][col + 1] && this.grid[row][col - 1] != 11 && this.grid[row][col + 1] != 11) {
+
+        isChained = true;
+      }
+
+      //checks if center of a vertical chain
+
+      if(this.grid[row + 1] && this.grid[row - 1]) {
+
+        if(variation == this.grid[row + 1][col] && variation == this.grid[row - 1][col] && this.grid[row + 1][col] != 11 && this.grid[row - 1][col] != 11) {
+
+          isChained = true;
+        }
+    }
+}
+
 
   return isChained;
   
@@ -219,6 +232,8 @@ Match3.Board.prototype.isChained = function(block) {
 //method that finds all chains, returns an array with all the chains
 
 Match3.Board.prototype.findAllChains = function() {
+
+
 
   var chained = [];
 
@@ -231,6 +246,7 @@ Match3.Board.prototype.findAllChains = function() {
       if(this.isChained({row: i, col: j})) {
 
         chained.push({row: i, col: j});
+        
       }
     }
   }
