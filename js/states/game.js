@@ -7,6 +7,8 @@ var scoreText;
 var loginName;
 var loginStatus;
 var updatemsg;
+var move;
+var foodiePoints;
 
 Match3.GameState = {
 
@@ -64,10 +66,13 @@ Match3.GameState = {
 
     this.blocks = this.add.group();
     score = 0;
+    move = 0;
 
     //black squares
     scoreText = this.add.text(this.world.centerX - 225, this.world.centerY - 275, "Score: 0", { font: '36px Arial', fill: 'black', align: 'left' });
     scoreText.anchor.setTo(0, 0);
+    moveText = this.add.text(this.world.centerX - 225, this.world.centerY - 300, "Move: 0", {font: "18px Arial", fill: 'black', align: 'left'});
+    moveText.anchor.setTo(0, 0);
     var squareBitmap = this.add.bitmapData(this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
     squareBitmap.ctx.fillStyle = '#000';
     squareBitmap.ctx.fillRect(0, 0, this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
@@ -136,13 +141,14 @@ Match3.GameState = {
   swapBlocks: function (block1, block2) {
 
     block1.scale.setTo(1);
+    move++;
 
     var block1Movement = this.game.add.tween(block1);
     block1Movement.to({ x: block2.x, y: block2.y }, this.ANIMATION_TIME);
 
     block1Movement.onComplete.add(function () {
 
-
+      moveText.setText('Move: ' + move);
 
       block1.rotting++;
       block1.frame = block1.rotting;
@@ -164,8 +170,7 @@ Match3.GameState = {
 
       if (chains.length > 0) {
 
-        score += chains.length;
-        //console.log(score);
+        score += chains.length + (chains.length - 3) * (chains.length - 3);
         this.updateBoard();
         this.clearSelection();
       } else {
