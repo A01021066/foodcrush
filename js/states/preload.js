@@ -16,7 +16,9 @@ Match3.PreloadState = {
     this.load.spritesheet('block4', 'assets/images/4.png', 50, 50);
     this.load.spritesheet('block5', 'assets/images/5.png', 50, 50);
     this.load.spritesheet('block6', 'assets/images/6.png',50, 50);
+    this.load.spritesheet('block7', 'assets/images/7.png',50, 50);
     this.load.spritesheet('garbage', 'assets/images/garbage.png', 50, 50);
+    this.load.image('boxBack', 'assets/images/boxBack.png');
     this.load.image('deadBlock', 'assets/images/dead.png');
     this.load.image('background', 'assets/images/backyard2.png');
     this.load.image('title', 'assets/images/title.png');
@@ -26,7 +28,11 @@ Match3.PreloadState = {
     this.load.image('fblogin', 'assets/button/fblogin.png');
     this.load.image('fblogout', 'assets/button/fblogout.png');
     this.load.image('submit', 'assets/button/submit.png');
+    this.load.image('play', 'assets/button/play.png');
+    this.load.image('mute', 'assets/button/mute.png');
+
     this.load.audio('ding', 'assets/audio/ding.mp3');
+    this.load.audio('backgroundmusic', 'assets/audio/background.mp3');
 
   },
   create: function() {
