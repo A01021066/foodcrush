@@ -23,7 +23,6 @@ Match3.GameState = {
   create: function () {
     //game background
     this.background = this.add.sprite(0, 0, 'background');
-    this.createMenu();
 
     //board model
 
