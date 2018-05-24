@@ -10,16 +10,16 @@ Match3.PreloadState = {
     this.load.setPreloadSprite(this.preloadBar);
 
     //load game assets
-    this.load.image('block1', 'assets/images/1.png');
-    this.load.image('block2', 'assets/images/2.png');
-    this.load.image('block3', 'assets/images/3.png');
-    this.load.image('block4', 'assets/images/4.png');
-    this.load.image('block5', 'assets/images/5.png');
-    this.load.image('block6', 'assets/images/6.png');
-    //this.load.image('block7', 'assets/images/7.png');
-    //this.load.image('block8', 'assets/images/8.png');
+    this.load.spritesheet('block1', 'assets/images/1.png', 50, 50);
+    this.load.spritesheet('block2', 'assets/images/2.png',50, 50);
+    this.load.spritesheet('block3', 'assets/images/3.png', 50, 50);
+    this.load.spritesheet('block4', 'assets/images/4.png', 50, 50);
+    this.load.spritesheet('block5', 'assets/images/5.png', 50, 50);
+    this.load.spritesheet('block6', 'assets/images/6.png',50, 50);
+    this.load.spritesheet('garbage', 'assets/images/garbage.png', 50, 50);
     this.load.image('deadBlock', 'assets/images/dead.png');
     this.load.image('background', 'assets/images/backyard2.png');
+    this.load.image('title', 'assets/images/title.png');
     this.load.image('start', 'assets/button/start.png');
     this.load.image('highscore', 'assets/button/highscores.png');
     this.load.image('back', 'assets/button/back.png');

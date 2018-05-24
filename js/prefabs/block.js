@@ -8,6 +8,7 @@ Match3.Block = function(state, x, y, data) {
   this.state = state;
   this.row = data.row;
   this.col = data.col;
+  this.rotting = 0;
 
   this.anchor.setTo(0.5);
 
@@ -31,7 +32,7 @@ Match3.Block.prototype.kill = function() {
 
   ding.play();
 
-
+  this.rotting = 0;
   this.loadTexture('deadBlock');
   this.col = null;
   this.row = null;

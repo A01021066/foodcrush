@@ -6,6 +6,7 @@ var scoreBoard;
 var scoreText;
 var loginName;
 var loginStatus;
+var updatemsg;
 
 Match3.GameState = {
 
@@ -20,18 +21,18 @@ Match3.GameState = {
   create: function () {
     //game background
     this.background = this.add.sprite(0, 0, 'background');
+    this.createMenu();
 
     //board model
-    this.board = new Match3.Board(this, this.NUM_ROWS, this.NUM_COLS, this.NUM_VARIATIONS);
-    this.board.consoleLog();
+
     Match3.game.plugins.add(PhaserInput.Plugin);
 
     //doesn't work on localhost
     /*FB.getLoginStatus(function (response) {
-            this.statusChangeCallback(response);
+      Match3.GameState.statusChangeCallback(response);
     });*/
 
-    this.createNamePrompt();
+    //this.createNamePrompt();
     ding = this.sound.add('ding');
 
 
@@ -57,11 +58,12 @@ Match3.GameState = {
 
   drawBoard: function () {
 
+    this.board = new Match3.Board(this, this.NUM_ROWS, this.NUM_COLS, this.NUM_VARIATIONS);
+    this.board.consoleLog();
     var i, j, block, square, x, y, data;
 
     this.blocks = this.add.group();
-    this.score = 0;
-
+    score = 0;
 
     //black squares
     scoreText = this.add.text(this.world.centerX - 225, this.world.centerY - 275, "Score: 0", { font: '36px Arial', fill: 'black', align: 'left' });
@@ -140,17 +142,34 @@ Match3.GameState = {
 
     block1Movement.onComplete.add(function () {
 
+
+
+      block1.rotting++;
+      block1.frame = block1.rotting;
+      block2.rotting++;
+      block2.frame = block2.rotting;
       this.board.swap(block1, block2);
+
+      if (block1.rotting >= 3){
+        block1.loadTexture('garbage', 0, false);
+      }
+
+      if (block2.rotting >= 3){
+        block2.loadTexture('garbage', 0, false);
+        this.board.consoleLog();
+      }
+
 
       var chains = this.board.findAllChains();
 
       if (chains.length > 0) {
-        this.score += chains.length;
-        console.log(this.score);
+
+        score += chains.length;
+        //console.log(score);
         this.updateBoard();
         this.clearSelection();
       } else {
-        this.isReversingSwap = false;
+
         this.clearSelection();
       }
     }, this);
@@ -164,7 +183,7 @@ Match3.GameState = {
   },
 
   updateScore: function () {
-    scoreText.setText('Score: ' + this.score);
+    scoreText.setText('Score: ' + score);
   },
 
   pickBlock: function (block) {
@@ -218,6 +237,7 @@ Match3.GameState = {
 
       if (chains.length > 0) {
         this.updateBoard();
+        score += chains.length;
 
       } else {
 
@@ -230,23 +250,26 @@ Match3.GameState = {
 
   createMenu: function () {
     menu = this.add.group();
-    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     menu.add(loginStatus);
 
-    var start = this.make.button(this.world.centerX - 95, this.world.centerY - 200, 'start', this.startToPlay, this, 2, 1, 0);
+    //var logo = this.make.image(this.world.centerX - 205, this.world.centerY - 300, 'title');
+    //menu.add(logo);
+
+    var start = this.make.button(this.world.centerX - 95, this.world.centerY, 'start', this.startToPlay, this, 2, 1, 0);
     menu.add(start);
 
-    var highscore = this.make.button(this.world.centerX - 95, this.world.centerY - 100, 'highscore', this.scoreBoard, this, 2, 1, 0);
+    var highscore = this.make.button(this.world.centerX - 95, this.world.centerY + 100, 'highscore', this.scoreBoard, this, 2, 1, 0);
     menu.add(highscore);
 
-    var logoutButton = this.make.button(this.world.centerX - 170, this.world.centerY, 'fblogout', this.logoutFB, this, 2, 1, 0);
+    var logoutButton = this.make.button(this.world.centerX - 170, this.world.centerY + 200, 'fblogout', this.logoutFB, this, 2, 1, 0);
     menu.add(logoutButton);
   },
 
   startToPlay: function () {
     menu.destroy();
     gameBack = this.add.group();
-    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     gameBack.add(loginStatus);
 
     var gameEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 250, 'back', this.endGame, this, 2, 1);
@@ -259,13 +282,13 @@ Match3.GameState = {
     gameBack.destroy();
     this.blocks.destroy();
     scoreText.destroy();
-    this.createMenu();
+    this.submitScore();
   },
 
   scoreBoard: function () {
     menu.destroy();
     scoreBoard = this.add.group();
-    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     scoreBoard.add(loginStatus);
 
     this.buildTable();
@@ -286,7 +309,7 @@ Match3.GameState = {
         console.log(data);
         var tstyle = { font: "12px Arial", fill: "#000" };
         var hstyle = { font: "bold 20px Arial", fill: "#000" };
-        var header = this.make.text(this.world.centerX - 80, this.world.centerY - 280, "High Scores", hstyle);
+        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280, "High Scores", hstyle);
         scoreBoard.add(header);
         var yShift = 0;
 
@@ -294,7 +317,7 @@ Match3.GameState = {
           yShift += 20;
           var xFlip = 1;
           for (var value in data["score"][key]) {
-            var newscore = this.make.text(this.world.centerX - 80 * xFlip, this.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
             scoreBoard.add(newscore);
             xFlip = -0.9;
           }
@@ -305,8 +328,32 @@ Match3.GameState = {
         console.log(errorThrown);
         console.log(jqXHR.reponseText);
         var tstyle = { font: "12px Arial", fill: "#000" };
-        var errormsg = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 250, "error retrieving database", tstyle);
-        scoreBoard.add(errormsg);
+        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 50, "error retrieving info from database", tstyle);
+        scoreBoard.add(updatemsg);
+      }
+    });
+  },
+
+  submitScore: function () {
+    console.log(loginName + " " + score);
+    $.ajax({
+      url: "./php/postnewscore.php",
+      type: "POST",
+      dataType: "json",
+      data: { 'username': loginName, 'score': score },
+      success: function (data) {
+        console.log("Data returned from server: ", data);
+        var tstyle = { font: "12px Arial", fill: "#000" };
+        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 50, data['msg'], tstyle);
+        Match3.GameState.createMenu();
+        menu.add(updatemsg);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.statusText);
+        var tstyle = { font: "12px Arial", fill: "#000" };
+        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 50, "Error sending score to database", tstyle);
+        Match3.GameState.createMenu();
+        menu.add(updatemsg);
       }
     });
   },
@@ -317,30 +364,56 @@ Match3.GameState = {
     this.createMenu();
   },
 
-  loginFB: function () {
+/*  loginFB: function () {
     FB.login(function (response) {
       if (response.authResponse) {
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function (response) {
           loginName = response.name;
+          menu.destroy();
+          Match3.GameState.createMenu();
         });
-        menu.destroy();
-        this.createMenu();
       } else {
         console.log('User cancelled login or did not fully authorize.');
       }
     });
   },
 
+  logoutFB: function () {
+    //doesn't work on local hosts
+    FB.getLoginStatus(function (response) {
+      if (response.status === 'connected') {
+        FB.logout(function (success) {
+          if (success.authResponse) {
+            console.log('Successfully logged out.');
+            loginName = "";
+            menu.destroy();
+            Match3.GameState.createNamePrompt();
+          } else {
+            console.log('Logout unsuccessful.');
+          }
+        });
+      } else {
+        console.log('Successfully logged out.');
+        loginName = "";
+        menu.destroy();
+        Match3.GameState.createNamePrompt();
+      }
+    });
+  },*/
+
   createNamePrompt: function () {
     menu = this.add.group();
-    loginStatus = this.make.text(10, 10, "Not Logged In.", { font: "12px Arial", fill: "#000" });
+    loginStatus = this.make.text(10, 10, "Not Logged In.", { font: "16px Arial", fill: "#000" });
     menu.add(loginStatus);
 
-    var message = this.make.text(this.world.centerX - 125, this.world.centerY - 250, "Please enter a username", { font: "bold 20px Arial", fill: "#000" });
+    //var logo = this.make.image(this.world.centerX - 205, this.world.centerY - 300, 'title');
+    //menu.add(logo);
+
+    var message = this.make.text(this.world.centerX - 125, this.world.centerY, "Please Enter A Username", { font: "bold 20px Arial", fill: "#000" });
     menu.add(message);
 
-    var nameField = this.add.inputField(this.world.centerX - 185, this.world.centerY - 210, {
+    var nameField = this.add.inputField(this.world.centerX - 185, this.world.centerY + 100, {
       font: '18px Arial',
       fill: '#000',
       padding: 9,
@@ -363,53 +436,23 @@ Match3.GameState = {
       }
     }
 
-    var submitButton = this.make.button(this.world.centerX + 50, this.world.centerY - 210, 'submit', nameSubmit, this, 2, 1, 0);
+    var submitButton = this.make.button(this.world.centerX + 50, this.world.centerY + 100, 'submit', nameSubmit, this, 2, 1, 0);
     menu.add(submitButton);
 
-    var loginButton = this.make.button(this.world.centerX - 145, this.world.centerY - 150, 'fblogin', this.loginFB, this, 2, 1, 0);
-    menu.add(loginButton);
+    /*var loginButton = this.make.button(this.world.centerX - 145, this.world.centerY + 200, 'fblogin', this.loginFB, this, 2, 1, 0);
+    menu.add(loginButton);*/
   },
 
-  statusChangeCallback: function (response) {
+  /*statusChangeCallback: function (response) {
     if (response.status === 'connected') {
       FB.api('/me', function (response) {
         loginName = response.name;
+        Match3.GameState.createMenu();
       });
-      menu.destroy();
-      this.createMenu();
     } else {
-      menu.destroy();
       this.createNamePrompt();
     }
-  },
-
-  logoutFB: function () {
-    //doesn't work on local hosts
-    /* FB.getLoginStatus(function (response) {
-        if (response.status === 'connected') {
-            FB.logout(function (success) {
-                if (success.authResponse) {
-                    console.log('Successfully logged out.');
-                    loginName = "";
-                    menu.destroy();
-                    this.createNamePrompt();
-                } else {
-                    console.log('Logout unsuccessful.');
-                }
-            });
-        } else {
-            console.log('Successfully logged out.');
-            loginName = "";
-            menu.destroy();
-            this.createNamePrompt();
-        }
-    }); */
-
-    console.log('Successfully logged out.');
-    loginName = "";
-    menu.destroy();
-    this.createNamePrompt();
-  }
+  }*/
 };
 
 
