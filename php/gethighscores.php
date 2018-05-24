@@ -19,7 +19,7 @@
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 
                 $sql = "SELECT username, score FROM level1 ORDER BY score DESC LIMIT 20";
-                $sql2 = "SELECT username, score FROM level1 WHERE username=$username";
+                $sql2 = "SELECT username, score FROM level1 WHERE username='$username'";
                 
                 $statement = $conn->prepare($sql);
                 $statement->execute();

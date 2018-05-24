@@ -286,15 +286,15 @@ Match3.GameState = {
   buildTable: function () {
     $.ajax({
       url: "./php/gethighscores.php",
-      dataType: "json",
       type: "GET",
-      data: { output: 'json', name: loginName },
+      dataType: "json",
+      data: { 'output': "json", 'name': loginName },
       success: function (data) {
 
         console.log(data);
         var tstyle = { font: "12px Arial", fill: "#000" };
         var hstyle = { font: "bold 20px Arial", fill: "#000" };
-        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280, "High Scores", hstyle);
+        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 300, "High Scores", hstyle);
         scoreBoard.add(header);
         var yShift = 0;
         var xFlip = 1;
@@ -303,18 +303,27 @@ Match3.GameState = {
           yShift += 20;
           xFlip = 1;
           for (var value in data["score"][key]) {
-            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 280 + yShift, data["score"][key][value], tstyle);
             scoreBoard.add(newscore);
             xFlip = -0.9;
           }
         }
 
+        yShift += 30;
+        var header2 = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280 + yShift, "Your High Score", hstyle);
+        scoreBoard.add(header2);
+
         yShift += 40;
-        xFlip = 1;
-        for (var key in data["userscore"]) {
-          var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["userscore"], tstyle);
-          scoreBoard.add(newscore);
-          xFlip = -0.9;
+        if (!data["userscore"]) {
+          var noscore = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 280 + yShift, "You have not yet submitted a score", tstyle);
+          scoreBoard.add(noscore);
+        } else {
+          xFlip = 1;
+          for (var key in data["userscore"]) {
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 280 + yShift, data["userscore"][key], tstyle);
+            scoreBoard.add(newscore);
+            xFlip = -0.9;
+          }
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -416,7 +425,7 @@ Match3.GameState = {
       borderColor: '#000',
       borderRadius: 6,
       placeHolder: 'ex: John Smith',
-      max: 16,
+      max: 20,
       type: PhaserInput.InputType.text
     });
     menu.add(nameField);
