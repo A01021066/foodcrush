@@ -176,8 +176,6 @@ Match3.Board.prototype.isChained = function(block) {
   //checks chain to left
   if (variation != 11){
   if(variation == this.grid[row][col - 1] && variation == this.grid[row][col - 2] && this.grid[row][col - 1] != 11 && this.grid[row][col - 2] != 11) {
-    console.log(this.grid[row][col - 1]);
-    console.log(this.grid[row][col - 2]);
     isChained = true;
   }
 
