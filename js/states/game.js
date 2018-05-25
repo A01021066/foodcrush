@@ -28,14 +28,11 @@ Match3.GameState = {
     music = this.sound.add('backgroundmusic');
     music.loopFull(0.6);
 
-    //change this after final version;
-    this.createMenu();
-
     //board model
 
     Match3.game.plugins.add(PhaserInput.Plugin);
 
-    mute = this.add.button(this.world.centerX + 192, this.world.centerY -345, 'play', this.muteMusic, this, 2, 1);
+    mute = this.add.button(this.world.centerX + 192, this.world.centerY - 345, 'play', this.muteMusic, this, 2, 1);
 
     //doesn't work on localhost
     FB.getLoginStatus(function (response) {
@@ -49,12 +46,12 @@ Match3.GameState = {
 
   },
 
-  muteMusic: function(){
+  muteMusic: function () {
     muteCounter++;
-    if (!Phaser.Math.isEven(muteCounter)){    
+    if (!Phaser.Math.isEven(muteCounter)) {
       music.pause();
       mute.loadTexture('mute', false);
-    } else if (Phaser.Math.isEven(muteCounter)){
+    } else if (Phaser.Math.isEven(muteCounter)) {
       music.resume();
       mute.loadTexture('play', false);
     }
@@ -62,8 +59,8 @@ Match3.GameState = {
 
 
 
-  update: function(){
-    if (garbageCount >= 3){
+  update: function () {
+    if (garbageCount >= 3) {
       this.endGame();
     };
   },
@@ -98,10 +95,10 @@ Match3.GameState = {
     //black squares
     scoreText = this.add.text(this.world.centerX - 225, this.world.centerY - 275, "Score: 0", { font: '36px Arial', fill: 'black', align: 'left' });
     scoreText.anchor.setTo(0, 0);
-    moveText = this.add.text(this.world.centerX - 225, this.world.centerY - 300, "Move: 0", {font: "18px Arial", fill: 'black', align: 'left'});
+    moveText = this.add.text(this.world.centerX - 225, this.world.centerY - 300, "Move: 0", { font: "18px Arial", fill: 'black', align: 'left' });
     moveText.anchor.setTo(0, 0);
-    garbageText = this.add.text(this.world.centerX + 100, this.world.centerY - 255, "Garbage: 0/3", {font: '18px Arial', fill: 'black', align: 'left'});
-    garbageText.anchor.setTo(0,0);
+    garbageText = this.add.text(this.world.centerX + 100, this.world.centerY - 255, "Garbage: 0/3", { font: '18px Arial', fill: 'black', align: 'left' });
+    garbageText.anchor.setTo(0, 0);
     var squareBitmap = this.add.bitmapData(this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
     squareBitmap.ctx.fillStyle = '#000';
     squareBitmap.ctx.fillRect(0, 0, this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
@@ -175,7 +172,7 @@ Match3.GameState = {
     var block1Movement = this.game.add.tween(block1);
     block1Movement.to({ x: block2.x, y: block2.y }, this.ANIMATION_TIME);
 
-    
+
     block1Movement.onComplete.add(function () {
 
       moveText.setText('Move: ' + move);
@@ -187,26 +184,26 @@ Match3.GameState = {
       block2.frame = block2.rotting;
       this.board.swap(block1, block2);
 
-      if (block1.rotting == 3){
+      if (block1.rotting == 3) {
         block1.loadTexture('garbage', 0, false);
         garbageCount++;
 
         garbageText.setText('Garbage: ' + garbageCount + '/3');
-        if(garbageCount >= 3){
+        if (garbageCount >= 3) {
           garbageText.setText('Wasted!');
 
         }
       }
 
-      if (block2.rotting == 3){
+      if (block2.rotting == 3) {
         block2.loadTexture('garbage', 0, false);
         this.board.consoleLog();
         garbageCount++;
 
         garbageText.setText('Garbage: ' + garbageCount + '/3');
-        if(garbageCount >= 3){
+        if (garbageCount >= 3) {
           garbageText.setText('Wasted!');
-          
+
         }
       }
 
@@ -340,69 +337,69 @@ Match3.GameState = {
   },
 
 
-  showMessageBox: function(text, w = 300, h = 300) {
-      //just in case the message box already exists
-      //destroy it
-        if (this.msgBox) {
-            this.msgBox.destroy();
-        }
-        //make a group to hold all the elements
-        var msgBox = this.game.add.group();
-        //make the back of the message box
-        var back = this.game.add.sprite(0, 0, "boxBack");
-        //make the close button
-        var closeButton = this.game.add.sprite(0, 0, "back");
-        //make a text field
-        var text1 = this.game.add.text(0, 0, text);
-        //set the textfeild to wrap if the text is too long
-        text1.wordWrap = true;
-        //make the width of the wrap 90% of the width 
-        //of the message box
-        text1.wordWrapWidth = w * .9;
-        //
-        //
-        //set the width and height passed
-        //in the parameters
-        back.width = w;
-        back.height = h;
-        //
-        //
-        //
-        //add the elements to the group
-        msgBox.add(back);
-        msgBox.add(closeButton);
-        msgBox.add(text1);
-        //
-        //set the close button
-        //in the center horizontally
-        //and near the bottom of the box vertically
-        closeButton.x = back.width / 2 - closeButton.width / 2;
-        closeButton.y = back.height - closeButton.height;
-        //enable the button for input
-        closeButton.inputEnabled = true;
-        //add a listener to destroy the box when the button is pressed
-        closeButton.events.onInputDown.add(this.hideBox, this);
-        //
-        //
-        //set the message box in the center of the screen
-        msgBox.x = this.game.width / 2 - msgBox.width / 2;
-        msgBox.y = this.game.height / 2 - msgBox.height / 2;
-        //
-        //set the text in the middle of the message box
-        text1.x = back.width / 2 - text1.width / 2;
-        text1.y = back.height / 2 - text1.height / 2;
-        //make a state reference to the messsage box
-        this.msgBox = msgBox;
-    },
-  
-    hideBox: function() {
-      //destroy the box when the button is pressed
-        this.msgBox.destroy();
-        Match3.GameState.createMenu();
-        menu.add(updatemsg);
-  
-    },
-  
+  showMessageBox: function (text, w = 300, h = 300) {
+    //just in case the message box already exists
+    //destroy it
+    if (this.msgBox) {
+      this.msgBox.destroy();
+    }
+    //make a group to hold all the elements
+    var msgBox = this.game.add.group();
+    //make the back of the message box
+    var back = this.game.add.sprite(0, 0, "boxBack");
+    //make the close button
+    var closeButton = this.game.add.sprite(0, 0, "back");
+    //make a text field
+    var text1 = this.game.add.text(0, 0, text);
+    //set the textfeild to wrap if the text is too long
+    text1.wordWrap = true;
+    //make the width of the wrap 90% of the width 
+    //of the message box
+    text1.wordWrapWidth = w * .9;
+    //
+    //
+    //set the width and height passed
+    //in the parameters
+    back.width = w;
+    back.height = h;
+    //
+    //
+    //
+    //add the elements to the group
+    msgBox.add(back);
+    msgBox.add(closeButton);
+    msgBox.add(text1);
+    //
+    //set the close button
+    //in the center horizontally
+    //and near the bottom of the box vertically
+    closeButton.x = back.width / 2 - closeButton.width / 2;
+    closeButton.y = back.height - closeButton.height;
+    //enable the button for input
+    closeButton.inputEnabled = true;
+    //add a listener to destroy the box when the button is pressed
+    closeButton.events.onInputDown.add(this.hideBox, this);
+    //
+    //
+    //set the message box in the center of the screen
+    msgBox.x = this.game.width / 2 - msgBox.width / 2;
+    msgBox.y = this.game.height / 2 - msgBox.height / 2;
+    //
+    //set the text in the middle of the message box
+    text1.x = back.width / 2 - text1.width / 2;
+    text1.y = back.height / 2 - text1.height / 2;
+    //make a state reference to the messsage box
+    this.msgBox = msgBox;
+  },
+
+  hideBox: function () {
+    //destroy the box when the button is pressed
+    this.msgBox.destroy();
+    Match3.GameState.createMenu();
+    menu.add(updatemsg);
+
+  },
+
 
   scoreBoard: function () {
     menu.destroy();
@@ -503,7 +500,7 @@ Match3.GameState = {
     this.createMenu();
   },
 
-loginFB: function () {
+  loginFB: function () {
     FB.login(function (response) {
       if (response.authResponse) {
         console.log('Welcome!  Fetching your information.... ');
