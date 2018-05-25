@@ -108,7 +108,7 @@ Match3.GameState = {
 
       for (j = 0; j < this.NUM_COLS; j++) {
 
-        x = 36 + j * (this.BLOCK_SIZE + 6);
+        x = 39 + j * (this.BLOCK_SIZE + 6);
         y = 150 + i * (this.BLOCK_SIZE + 6);
 
         square = this.add.sprite(x, y, squareBitmap);
@@ -333,7 +333,7 @@ Match3.GameState = {
     moveText.destroy();
     garbageText.destroy();
     this.submitScore();
-    this.showMessageBox("GAME OVER! \n Your score was " + score, this.game.width * .7, this.game.height * .5);
+    this.showMessageBox("   GAME OVER! \nYour score was " + score, this.game.width * .7, this.game.height * .5);
   },
 
 
