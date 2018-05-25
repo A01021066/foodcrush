@@ -38,9 +38,9 @@ Match3.GameState = {
     mute = this.add.button(this.world.centerX + 192, this.world.centerY -345, 'play', this.muteMusic, this, 2, 1);
 
     //doesn't work on localhost
-    /*FB.getLoginStatus(function (response) {
+    FB.getLoginStatus(function (response) {
       Match3.GameState.statusChangeCallback(response);
-    });*/
+    });
 
     //this.createNamePrompt();
     ding = this.sound.add('ding');
@@ -215,7 +215,6 @@ Match3.GameState = {
 
 
       if (chains.length > 0) {
-
         score += chains.length + (chains.length - 3) * (chains.length - 3);
         this.updateBoard();
         this.clearSelection();
@@ -421,23 +420,43 @@ Match3.GameState = {
   buildTable: function () {
     $.ajax({
       url: "./php/gethighscores.php",
-      dataType: "json",
       type: "GET",
-      data: { output: 'json' },
+      dataType: "json",
+      data: { 'output': "json", 'name': loginName },
       success: function (data) {
 
         console.log(data);
         var tstyle = { font: "12px Arial", fill: "#000" };
         var hstyle = { font: "bold 20px Arial", fill: "#000" };
-        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280, "High Scores", hstyle);
+
+        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 300, "High Scores", hstyle);
+
         scoreBoard.add(header);
         var yShift = 0;
+        var xFlip = 1;
 
         for (var key in data["score"]) {
           yShift += 20;
-          var xFlip = 1;
+          xFlip = 1;
           for (var value in data["score"][key]) {
-            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 280 + yShift, data["score"][key][value], tstyle);
+            scoreBoard.add(newscore);
+            xFlip = -0.9;
+          }
+        }
+
+        yShift += 30;
+        var header2 = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280 + yShift, "Your High Score", hstyle);
+        scoreBoard.add(header2);
+
+        yShift += 40;
+        if (!data["userscore"]) {
+          var noscore = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 280 + yShift, "You have not yet submitted a score", tstyle);
+          scoreBoard.add(noscore);
+        } else {
+          xFlip = 1;
+          for (var key in data["userscore"]) {
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 280 + yShift, data["userscore"][key], tstyle);
             scoreBoard.add(newscore);
             xFlip = -0.9;
           }
@@ -484,7 +503,7 @@ Match3.GameState = {
     this.createMenu();
   },
 
-/*  loginFB: function () {
+loginFB: function () {
     FB.login(function (response) {
       if (response.authResponse) {
         console.log('Welcome!  Fetching your information.... ');
@@ -520,7 +539,7 @@ Match3.GameState = {
         Match3.GameState.createNamePrompt();
       }
     });
-  },*/
+  },
 
   createNamePrompt: function () {
     menu = this.add.group();
@@ -559,11 +578,11 @@ Match3.GameState = {
     var submitButton = this.make.button(this.world.centerX + 50, this.world.centerY + 100, 'submit', nameSubmit, this, 2, 1, 0);
     menu.add(submitButton);
 
-    /*var loginButton = this.make.button(this.world.centerX - 145, this.world.centerY + 200, 'fblogin', this.loginFB, this, 2, 1, 0);
-    menu.add(loginButton);*/
+    var loginButton = this.make.button(this.world.centerX - 145, this.world.centerY + 200, 'fblogin', this.loginFB, this, 2, 1, 0);
+    menu.add(loginButton);
   },
 
-  /*statusChangeCallback: function (response) {
+  statusChangeCallback: function (response) {
     if (response.status === 'connected') {
       FB.api('/me', function (response) {
         loginName = response.name;
@@ -572,8 +591,7 @@ Match3.GameState = {
     } else {
       this.createNamePrompt();
     }
-  }*/
-
+  }
 };
 
 

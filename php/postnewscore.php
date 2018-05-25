@@ -19,7 +19,7 @@
                 
                 $trimmed = trim($username);
               
-                $data = array("msg" => "Thank you $trimmed, your highscore of $score has been updated!",
+                $data = array("msg" => "Thank you $trimmed, your score of $score has been submitted!",
                     "username" => "$trimmed", "score" => "$score");
                 
                 $lower = strtolower($trimmed);
