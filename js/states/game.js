@@ -93,11 +93,11 @@ Match3.GameState = {
     move = 0;
 
     //black squares
-    scoreText = this.add.text(this.world.centerX - 225, this.world.centerY - 275, "Score: 0", { font: '36px Arial', fill: 'black', align: 'left' });
+    scoreText = this.add.text(this.world.centerX - 180, this.world.centerY - 265, "Score: 0", { font: '36px Arial', fill: 'black', align: 'left' });
     scoreText.anchor.setTo(0, 0);
-    moveText = this.add.text(this.world.centerX - 225, this.world.centerY - 300, "Move: 0", { font: "18px Arial", fill: 'black', align: 'left' });
-    moveText.anchor.setTo(0, 0);
-    garbageText = this.add.text(this.world.centerX + 100, this.world.centerY - 255, "Garbage: 0/3", { font: '18px Arial', fill: 'black', align: 'left' });
+    //moveText = this.add.text(this.world.centerX - 10, this.world.centerY - 255, "Move: 0", { font: "18px Arial", fill: 'black', align: 'left' });
+    //moveText.anchor.setTo(0, 0);
+    garbageText = this.add.text(this.world.centerX + 90, this.world.centerY - 255, "Garbage: 0/3", { font: '18px Arial', fill: 'black', align: 'left' });
     garbageText.anchor.setTo(0, 0);
     var squareBitmap = this.add.bitmapData(this.BLOCK_SIZE + 4, this.BLOCK_SIZE + 4);
     squareBitmap.ctx.fillStyle = '#000';
@@ -175,7 +175,7 @@ Match3.GameState = {
 
     block1Movement.onComplete.add(function () {
 
-      moveText.setText('Move: ' + move);
+      //moveText.setText('Move: ' + move);
 
 
       block1.rotting++;
@@ -295,6 +295,8 @@ Match3.GameState = {
   },
 
   createMenu: function () {
+    //menu background
+    this.background.loadTexture('background');
     menu = this.add.group();
     garbageCount = 0;
     loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
@@ -309,17 +311,19 @@ Match3.GameState = {
     var highscore = this.make.button(this.world.centerX - 95, this.world.centerY + 100, 'highscore', this.scoreBoard, this, 2, 1, 0);
     menu.add(highscore);
 
-    var logoutButton = this.make.button(this.world.centerX - 170, this.world.centerY + 200, 'fblogout', this.logoutFB, this, 2, 1, 0);
+    var logoutButton = this.make.button(this.world.centerX - 95, this.world.centerY + 200, 'fblogout', this.logoutFB, this, 2, 1, 0);
     menu.add(logoutButton);
   },
 
   startToPlay: function () {
+    //game background
+    this.background.loadTexture('background2');
     menu.destroy();
     gameBack = this.add.group();
     loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     gameBack.add(loginStatus);
 
-    var gameEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 250, 'back', this.endGame, this, 2, 1);
+    var gameEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 270, 'back', this.endGame, this, 2, 1);
     gameBack.add(gameEnd);
 
     this.drawBoard();
@@ -330,10 +334,10 @@ Match3.GameState = {
     gameBack.destroy();
     this.blocks.destroy();
     scoreText.destroy();
-    moveText.destroy();
+    //moveText.destroy();
     garbageText.destroy();
     this.submitScore();
-    this.showMessageBox("   GAME OVER! \nYour score was " + score, this.game.width * .7, this.game.height * .5);
+    this.showMessageBox("   GAME OVER! \nYour Score Was " + score, this.game.width * .7, this.game.height * .5);
   },
 
 
@@ -402,6 +406,8 @@ Match3.GameState = {
 
 
   scoreBoard: function () {
+    //score background
+    this.background.loadTexture('background2');
     menu.destroy();
     scoreBoard = this.add.group();
     loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
@@ -410,7 +416,7 @@ Match3.GameState = {
     this.buildTable();
 
     scoreBack = this.add.group();
-    var scoreEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 250, 'back', this.endScore, this, 2, 1);
+    var scoreEnd = this.make.button(this.world.centerX - 95, this.world.centerY + 270, 'back', this.endScore, this, 2, 1);
     scoreBack.add(scoreEnd);
   },
 
@@ -426,7 +432,7 @@ Match3.GameState = {
         var tstyle = { font: "12px Arial", fill: "#000" };
         var hstyle = { font: "bold 20px Arial", fill: "#000" };
 
-        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 300, "High Scores", hstyle);
+        var header = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 260, "High Scores", hstyle);
 
         scoreBoard.add(header);
         var yShift = 0;
@@ -436,24 +442,24 @@ Match3.GameState = {
           yShift += 20;
           xFlip = 1;
           for (var value in data["score"][key]) {
-            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 280 + yShift, data["score"][key][value], tstyle);
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["score"][key][value], tstyle);
             scoreBoard.add(newscore);
             xFlip = -0.9;
           }
         }
 
         yShift += 30;
-        var header2 = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 280 + yShift, "Your High Score", hstyle);
+        var header2 = Match3.game.make.text(Match3.game.world.centerX - 80, Match3.game.world.centerY - 250 + yShift, "Your High Score", hstyle);
         scoreBoard.add(header2);
 
-        yShift += 40;
+        yShift += 30;
         if (!data["userscore"]) {
-          var noscore = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 280 + yShift, "You have not yet submitted a score", tstyle);
+          var noscore = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 250 + yShift, "You have not yet submitted a score", tstyle);
           scoreBoard.add(noscore);
         } else {
           xFlip = 1;
           for (var key in data["userscore"]) {
-            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 280 + yShift, data["userscore"][key], tstyle);
+            var newscore = Match3.game.make.text(Match3.game.world.centerX - 160 * xFlip, Match3.game.world.centerY - 250 + yShift, data["userscore"][key], tstyle);
             scoreBoard.add(newscore);
             xFlip = -0.9;
           }

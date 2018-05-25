@@ -21,12 +21,13 @@ Match3.PreloadState = {
     this.load.image('boxBack', 'assets/images/boxBack.png');
     this.load.image('deadBlock', 'assets/images/dead.png');
     this.load.image('background', 'assets/images/backyard2.png');
+    this.load.image('background2', 'assets/images/backyard5.png');
     this.load.image('title', 'assets/images/title.png');
     this.load.image('start', 'assets/button/start.png');
     this.load.image('highscore', 'assets/button/highscores.png');
     this.load.image('back', 'assets/button/back.png');
     this.load.image('fblogin', 'assets/button/fblogin.png');
-    this.load.image('fblogout', 'assets/button/fblogout.png');
+    this.load.image('fblogout', 'assets/button/fblogout2.png');
     this.load.image('submit', 'assets/button/submit.png');
     this.load.image('play', 'assets/button/play.png');
     this.load.image('mute', 'assets/button/mute.png');
