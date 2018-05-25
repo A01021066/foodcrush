@@ -302,16 +302,16 @@ Match3.GameState = {
     loginStatus = this.make.text(10, 10, "Logged in as: " + loginName, { font: "16px Arial", fill: "#000" });
     menu.add(loginStatus);
 
-    //var logo = this.make.image(this.world.centerX - 205, this.world.centerY - 300, 'title');
-    //menu.add(logo);
+    var logo = this.make.image(this.world.centerX - 205, this.world.centerY - 300, 'title');
+    menu.add(logo);
 
-    var start = this.make.button(this.world.centerX - 95, this.world.centerY, 'start', this.startToPlay, this, 2, 1, 0);
+    var start = this.make.button(this.world.centerX - 95, this.world.centerY + 30, 'start', this.startToPlay, this, 2, 1, 0);
     menu.add(start);
 
-    var highscore = this.make.button(this.world.centerX - 95, this.world.centerY + 100, 'highscore', this.scoreBoard, this, 2, 1, 0);
+    var highscore = this.make.button(this.world.centerX - 95, this.world.centerY + 130, 'highscore', this.scoreBoard, this, 2, 1, 0);
     menu.add(highscore);
 
-    var logoutButton = this.make.button(this.world.centerX - 95, this.world.centerY + 200, 'fblogout', this.logoutFB, this, 2, 1, 0);
+    var logoutButton = this.make.button(this.world.centerX - 95, this.world.centerY + 230, 'fblogout', this.logoutFB, this, 2, 1, 0);
     menu.add(logoutButton);
   },
 
@@ -486,14 +486,14 @@ Match3.GameState = {
       success: function (data) {
         console.log("Data returned from server: ", data);
         var tstyle = { font: "12px Arial", fill: "#000" };
-        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 50, data['msg'], tstyle);
+        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 20, data['msg'], tstyle);
         //Match3.GameState.createMenu();
         menu.add(updatemsg);
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.statusText);
         var tstyle = { font: "12px Arial", fill: "#000" };
-        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 50, "Error sending score to database", tstyle);
+        updatemsg = Match3.game.make.text(Match3.game.world.centerX - 160, Match3.game.world.centerY - 20, "Error sending score to database", tstyle);
         //Match3.GameState.createMenu();
         menu.add(updatemsg);
       }
@@ -549,10 +549,10 @@ Match3.GameState = {
     loginStatus = this.make.text(10, 10, "Not Logged In.", { font: "16px Arial", fill: "#000" });
     menu.add(loginStatus);
 
-    //var logo = this.make.image(this.world.centerX - 205, this.world.centerY - 300, 'title');
-    //menu.add(logo);
+    var logo = this.make.image(this.world.centerX - 205, this.world.centerY - 300, 'title');
+    menu.add(logo);
 
-    var message = this.make.text(this.world.centerX - 125, this.world.centerY, "Please Enter A Username", { font: "bold 20px Arial", fill: "#000" });
+    var message = this.make.text(this.world.centerX - 125, this.world.centerY + 40, "Please Enter A Username", { font: "bold 20px Arial", fill: "#000" });
     menu.add(message);
 
     var nameField = this.add.inputField(this.world.centerX - 185, this.world.centerY + 100, {
